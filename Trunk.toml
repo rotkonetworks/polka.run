@@ -1,0 +1,4 @@
+[[hooks]]
+stage = "pre_build"
+command = "sh"
+command_arguments = ["-c", "npx @unocss/cli src/**/*.rs index.html --out-file style/output.css"]
