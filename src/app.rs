@@ -12,14 +12,14 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     view! {
-            <Navigation/>
-            <Router>
-                <Routes>
-                    <Route path="" view=  move || view! { <Home/> }/>
-                    <Route path="disassembler" view=  move || view! { <Disassembler/> }/>
-                </Routes>
-            </Router>
-        }
+        <Navigation/>
+        <Router>
+            <Routes>
+                <Route path="" view=  move || view! { <Home/> }/>
+                <Route path="disassembler" view=  move || view! { <Disassembler/> }/>
+            </Routes>
+        </Router>
+    }
 }
 
 #[component]
@@ -116,8 +116,8 @@ fn Disassembler() -> impl IntoView {
                         <h3 class="mb-4 text-2xl">"Uploaded file data:"</h3>
                         <pre class="border border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
                             {
-                                move || unified_data().iter().map(|line| view! { 
-                                    <div class="py-1 font-mono text-xs">{ line.clone() }</div> 
+                                move || unified_data().iter().map(|line| view! {
+                                    <div class="py-1 font-mono text-xs">{ line.clone() }</div>
                                 }).collect::<Vec<_>>()
                             }
                         </pre>
