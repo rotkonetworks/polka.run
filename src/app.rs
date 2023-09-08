@@ -48,7 +48,7 @@ fn Home() -> impl IntoView {
 
 #[component]
 fn Disassembler() -> impl IntoView {
-    fn unified_representation(data: &Vec<u8>) -> Vec<String> {
+    fn unified_representation(data: &[u8]) -> Vec<String> {
         data.chunks(16)
             .map(|chunk| {
                 let hex_part = chunk
@@ -59,7 +59,7 @@ fn Disassembler() -> impl IntoView {
                 let text_part: String = chunk
                     .iter()
                     .map(|&byte| {
-                        if (byte >= 32 && byte <= 126) || byte == 10 || byte == 13 {
+                        if (32..=126).contains(&byte) || byte == 10 || byte == 13 {
                             byte as char
                         } else {
                             '.'
@@ -71,8 +71,8 @@ fn Disassembler() -> impl IntoView {
             .collect()
     }
 
-    fn disassemble_into(data: &Vec<u8>) -> Result<String, &'static str> {
-        let blob = ProgramBlob::parse(data.clone());
+    fn disassemble_into(data: &[u8]) -> Result<String, &'static str> {
+        let blob = ProgramBlob::parse(data);
         if blob.is_err() {
             return Err("Failed to parse blob");
         }
