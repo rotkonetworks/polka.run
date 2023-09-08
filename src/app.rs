@@ -13,13 +13,13 @@ pub fn App() -> impl IntoView {
 
     view! {
 
-        <Router>
-            <Routes>
-                <Route path="" view=  move || view! { <Home/> }/>
-                <Route path="/disassembler" view=  move || view! { <Disassembler/> }/>
-            </Routes>
-        </Router>
-    }
+            <Router>
+                <Routes>
+                    <Route path="" view=  move || view! { <Home/> }/>
+    //                <Route path="/disassembler" view=  move || view! { <Disassembler/> }/>
+                </Routes>
+            </Router>
+        }
 }
 
 #[component]
@@ -27,11 +27,13 @@ fn Home() -> impl IntoView {
     fn unified_representation(data: &Vec<u8>) -> Vec<String> {
         data.chunks(16)
             .map(|chunk| {
-                let hex_part = chunk.iter()
+                let hex_part = chunk
+                    .iter()
                     .map(|byte| format!("{:02x}", byte))
                     .collect::<Vec<String>>()
                     .join(" ");
-                let text_part: String = chunk.iter()
+                let text_part: String = chunk
+                    .iter()
                     .map(|&byte| {
                         if (byte >= 32 && byte <= 126) || byte == 10 || byte == 13 {
                             byte as char
@@ -39,10 +41,10 @@ fn Home() -> impl IntoView {
                             '.'
                         }
                     })
-                .collect();
+                    .collect();
                 format!("{:<48} {}", hex_part, text_part)
             })
-        .collect()
+            .collect()
     }
 
     fn disassemble_into(data: &Vec<u8>) -> Result<String, &'static str> {
@@ -57,7 +59,7 @@ fn Home() -> impl IntoView {
             match maybe_instruction {
                 Ok(instruction) => {
                     result.push_str(&format!("{}: {}\n", nth_instruction, instruction));
-                },
+                }
                 Err(error) => {
                     result.push_str(&format!(
                         "ERROR: failed to parse raw instruction from blob. nth: {} Error: {}\n",
@@ -178,4 +180,3 @@ fn FileUploadComponent<F: Fn(Option<Vec<u8>>) + 'static>(on_file_uploaded: F) ->
             </div>
     }
 }
-
