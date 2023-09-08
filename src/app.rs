@@ -12,7 +12,7 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     view! {
-
+            <Navigation/>
             <Router>
                 <Routes>
                     <Route path="" view=  move || view! { <Home/> }/>
@@ -23,18 +23,24 @@ pub fn App() -> impl IntoView {
 }
 
 #[component]
+fn Navigation() -> impl IntoView {
+    view! {
+        <nav class="bg-#552BBF">
+            <a href="/" class="inline-block px-4 py-2 text-#D3FF33 hover:bg-#421E9D  hover:text-#E1FF66">Home</a>
+            <a href="/disassembler" class="inline-block px-4 py-2 text-#D3FF33 hover:bg-#421E9D  hover:text-#E1FF66">Disassembler</a>
+        </nav>
+    }
+}
+
+#[component]
 fn Home() -> impl IntoView {
     view! {
-    <h1>"polkavm playground"</h1>
-    <div class="flex flex-wrap gap-6 mt-6">
-        <div class="w-1/2">
-            <h2 class="text-2xl">"Disassembler"</h2>
-            <p class="text-gray-600">"Upload a .wasm file to see its disassembled instructions"</p>
-            <a href="/disassembler" class="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">"Go to disassembler"</a>
-        </div>
-        <div class="w-1/2">
-            <h2 class="text-2xl">"Coming soon"</h2>
-            <p class="text-gray-600">"More tools will be added soon!"</p>
+    <div class="p-8">
+        <h1 class="text-2xl">"polka.run"</h1>
+        <div class="flex flex-wrap gap-6 mt-6">
+            <div class="w-1/2">
+                <p class="text-md">"Building all things for web3 ecosystem"</p>
+            </div>
         </div>
     </div>
     }
