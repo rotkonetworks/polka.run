@@ -48,9 +48,6 @@ jobs:
     - name: Build Rust project with trunk
       run: trunk build
 
-    - name: Create 404 redirection for SPA
-      run: cp dist/index.html dist/404.html
-
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
