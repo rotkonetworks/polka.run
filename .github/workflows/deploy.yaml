@@ -40,10 +40,10 @@ jobs:
       run: rustup target add wasm32-unknown-unknown
 
     - name: Install cargo-generate
-      run: cargo install cargo-generate
+      run: cargo generate --version || cargo install cargo-generate
 
     - name: Install trunk
-      run: cargo install trunk
+      run: trunk --version || cargo install trunk
 
     - name: Build Rust project with trunk
       run: trunk build
