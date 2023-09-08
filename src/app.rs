@@ -16,7 +16,7 @@ pub fn App() -> impl IntoView {
             <Router>
                 <Routes>
                     <Route path="" view=  move || view! { <Home/> }/>
-    //                <Route path="/disassembler" view=  move || view! { <Disassembler/> }/>
+                    <Route path="disassembler" view=  move || view! { <Disassembler/> }/>
                 </Routes>
             </Router>
         }
@@ -24,6 +24,24 @@ pub fn App() -> impl IntoView {
 
 #[component]
 fn Home() -> impl IntoView {
+    view! {
+    <h1>"polkavm playground"</h1>
+    <div class="flex flex-wrap gap-6 mt-6">
+        <div class="w-1/2">
+            <h2 class="text-2xl">"Disassembler"</h2>
+            <p class="text-gray-600">"Upload a .wasm file to see its disassembled instructions"</p>
+            <a href="/disassembler" class="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">"Go to disassembler"</a>
+        </div>
+        <div class="w-1/2">
+            <h2 class="text-2xl">"Coming soon"</h2>
+            <p class="text-gray-600">"More tools will be added soon!"</p>
+        </div>
+    </div>
+    }
+}
+
+#[component]
+fn Disassembler() -> impl IntoView {
     fn unified_representation(data: &Vec<u8>) -> Vec<String> {
         data.chunks(16)
             .map(|chunk| {
@@ -75,8 +93,8 @@ fn Home() -> impl IntoView {
     let (disassembled_data, set_disassembled_data) = create_signal(String::new());
 
     view! {
-        <div class="my-0 mx-auto max-w-3xl text-center">
-            <h2 class="p-6 text-4xl">"polkavm disassembler"</h2>
+        <div class="my-0 mx-auto max-w-3xl p-6">
+            <h2 class="text-4xl text-center">"polkavm disassembler"</h2>
             <FileUploadComponent on_file_uploaded=move |data_option| {
                 if let Some(data) = data_option {
                     set_unified_data(unified_representation(&data));
@@ -86,26 +104,26 @@ fn Home() -> impl IntoView {
                     }
                 }
             }/>
-            <div class="mt-4">
-            { "Uploaded file data:" }
-            <pre class="border rounded p-2 bg-gray-100">
-                { move || unified_data().clone() }
-            </pre>
+            //if unified_data().len() > 0 {
+                <div class="grid grid-cols-10 gap-6 mt-6">
+                    <div class="col-span-7">
+                        <h3 class="mb-4 text-2xl">"Uploaded file data:"</h3>
+                        <pre class="border border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
+                            {
+                                move || unified_data().iter().map(|line| view! { 
+                                    <div class="py-1 font-mono text-xs">{ line.clone() }</div> 
+                                }).collect::<Vec<_>>()
+                            }
+                        </pre>
+                    </div>
+                    <div class="col-span-3">
+                        <h3 class="mb-4 text-2xl">"Parsed Instructions:"</h3>
+                        <pre class="border border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
+                            { move || disassembled_data().clone() }
+                        </pre>
+                    </div>
                 </div>
-                <div class="mt-4">
-                { "Uploaded file data (Unified):" }
-            <pre class="border rounded p-2 bg-gray-100">
-            </pre>
-                {
-                    move || unified_data().iter().map(|line| view! { <div> { line.clone() } </div> }).collect::<Vec<_>>()
-                }
-            </div>
-            <div class="mt-4">
-                { "Parsed Instructions:" }
-                <pre class="border rounded p-2 bg-gray-100">
-                    { move || disassembled_data().clone() }
-                </pre>
-            </div>
+            //}
         </div>
     }
 }
