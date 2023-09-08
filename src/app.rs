@@ -48,7 +48,7 @@ fn Home() -> impl IntoView {
     }
 
     fn disassemble_into(data: &Vec<u8>) -> Result<String, &'static str> {
-        let blob = ProgramBlob::new(data.clone());
+        let blob = ProgramBlob::parse(data.clone());
         if blob.is_err() {
             return Err("Failed to parse blob");
         }
@@ -72,7 +72,6 @@ fn Home() -> impl IntoView {
     }
 
     let (unified_data, set_unified_data) = create_signal(Vec::new());
-    let (instructions, set_instructions) = create_signal(Vec::new());
     let (disassembled_data, set_disassembled_data) = create_signal(String::new());
 
     view! {
@@ -90,25 +89,21 @@ fn Home() -> impl IntoView {
             <div class="mt-4">
             { "Uploaded file data:" }
             <pre class="border rounded p-2 bg-gray-100">
-            { move || unified_data() }
+                { move || unified_data().clone() }
             </pre>
                 </div>
                 <div class="mt-4">
                 { "Uploaded file data (Unified):" }
             <pre class="border rounded p-2 bg-gray-100">
-            {
-                for line in unified_data().iter() {
-                    view! {
-                        <div> { line } </div>
-                    }
-                }
-            }
             </pre>
+                {
+                    move || unified_data().iter().map(|line| view! { <div> { line.clone() } </div> }).collect::<Vec<_>>()
+                }
             </div>
             <div class="mt-4">
                 { "Parsed Instructions:" }
                 <pre class="border rounded p-2 bg-gray-100">
-                    { disassembled_data() }
+                    { move || disassembled_data().clone() }
                 </pre>
             </div>
         </div>
