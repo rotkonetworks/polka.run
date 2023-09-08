@@ -48,6 +48,9 @@ jobs:
     - name: Build Rust project with trunk
       run: trunk build
 
+    - name: Copy CNAME for custom domain
+      run: cp CNAME ./dist/
+
     - name: Create 404 redirection for SPA
       run: cp dist/index.html dist/404.html
 
