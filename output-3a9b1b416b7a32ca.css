@@ -11,10 +11,12 @@
 .mb-4{margin-bottom:1rem;}
 .mt-6{margin-top:1.5rem;}
 .inline-block{display:inline-block;}
+.hidden{display:none;}
 .max-w-3xl{max-width:48rem;}
 .w-1\/2{width:50%;}
 .flex{display:flex;}
 .flex-wrap{flex-wrap:wrap;}
+.justify-between{justify-content:space-between;}
 .gap-6{gap:1.5rem;}
 .overflow-x-scroll{overflow-x:scroll;}
 .border{border-width:1px;}
@@ -36,5 +38,10 @@
 .text-4xl{font-size:2.25rem;line-height:2.5rem;}
 .text-xs{font-size:0.75rem;line-height:1rem;}
 .font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;}
+.text-\#151513{--un-text-opacity:1;color:rgba(21,21,19,var(--un-text-opacity));}
 .text-\#D3FF33{--un-text-opacity:1;color:rgba(211,255,51,var(--un-text-opacity));}
+.hover\:text-\#000000:hover{--un-text-opacity:1;color:rgba(0,0,0,var(--un-text-opacity));}
 .hover\:text-\#E1FF66:hover{--un-text-opacity:1;color:rgba(225,255,102,var(--un-text-opacity));}
+@media (min-width: 768px){
+.md\:block{display:block;}
+}
