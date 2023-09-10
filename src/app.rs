@@ -1,11 +1,11 @@
 use leptos::*;
-use leptos_meta::*;
-use leptos_router::*;
+use leptos_meta::provide_meta_context;
+use leptos_router::{Route, Router, Routes};
 use polkavm::ProgramBlob;
 use std::rc::Rc;
 
-use wasm_bindgen::prelude::*;
-use web_sys::*;
+use wasm_bindgen::{Closure, JsCast};
+use web_sys::{File, FileReader, HtmlInputElement, ProgressEvent, DragEvent};
 
 #[component]
 pub fn App() -> impl IntoView {
