@@ -4,7 +4,7 @@ use leptos_router::{Route, Router, Routes};
 use polkavm::ProgramBlob;
 use std::rc::Rc;
 
-use wasm_bindgen::{Closure, JsCast};
+use wasm_bindgen::{closure::Closure, JsCast};
 use web_sys::{File, FileReader, HtmlInputElement, ProgressEvent, DragEvent};
 
 #[component]
@@ -155,8 +155,8 @@ fn Disassembler() -> impl IntoView {
 fn FileUploadComponent<F: Fn(Option<Vec<u8>>) + 'static>(on_file_uploaded: F) -> impl IntoView {
     let on_file_uploaded = Rc::new(on_file_uploaded);
 
-    let process_file = |on_file_uploaded: Rc<F>, file: web_sys::File| {
-        let reader = web_sys::FileReader::new().unwrap();
+    let process_file = |on_file_uploaded: Rc<F>, file: File| {
+        let reader = FileReader::new().unwrap();
         let reader_c = reader.clone();
 
         let on_file_uploaded_cloned = on_file_uploaded.clone();
