@@ -12,6 +12,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Install bunx to use unocss
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+
     - name: Cache Rust dependencies
       uses: actions/cache@v2
       with:
