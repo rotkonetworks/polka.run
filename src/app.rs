@@ -5,7 +5,7 @@ use polkavm::ProgramBlob;
 use std::rc::Rc;
 
 use wasm_bindgen::{closure::Closure, JsCast};
-use web_sys::{File, FileReader, HtmlInputElement, ProgressEvent, DragEvent};
+use web_sys::{DragEvent, File, FileReader, HtmlInputElement, ProgressEvent};
 
 #[component]
 pub fn App() -> impl IntoView {
