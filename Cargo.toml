@@ -12,13 +12,11 @@ polkavm = "0.1.1"
 js-sys = "0.3.64"
 web-sys = { version = "0.3.64", features = ["HtmlInputElement", "DataTransfer", "DragEvent", "File", "FileList", "FileReader", "ProgressEvent"] }
 
-
 # dependecies for client (enable when csr or hydrate set)
 wasm-bindgen = { version = "0.2" }
 log = "0.4.17"
 console_log = { version = "1"}
 console_error_panic_hook = { version = "0.1"}
-
 
 [workspace.metadata.leptos]
 name = "polkarun"

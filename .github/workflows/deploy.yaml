@@ -29,6 +29,12 @@ jobs:
           target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
+    - name: Install cargo-generate
+      run: cargo generate --version || cargo install cargo-generate
+
+    - name: Install trunk
+      run: trunk --version || cargo install trunk
+
     - name: Install minimal nightly with clippy and rustfmt
       uses: actions-rs/toolchain@v1
       with:
@@ -45,11 +51,8 @@ jobs:
     - name: Add wasm target
       run: rustup target add wasm32-unknown-unknown
 
-    - name: Install cargo-generate
-      run: cargo generate --version || cargo install cargo-generate
-
-    - name: Install trunk
-      run: trunk --version || cargo install trunk
+    - name: list source
+      run: ls src/
 
     - name: Build Rust project with trunk
       run: trunk build
