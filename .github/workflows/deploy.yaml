@@ -9,14 +9,8 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
+    - ame: Checkout repository
       uses: actions/checkout@v2
-
-    - name: Install bunx to use unocss
-      uses: oven-sh/setup-bun@v1
-      with:
-        bun-version: latest
-    - run: bunx cowsay "Hello!"
 
     - name: Cache Rust dependencies
       uses: actions/cache@v2
