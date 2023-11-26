@@ -2,4 +2,4 @@
 stage = "pre_build"
 command = "sh"
 #command_arguments = ["-c", "bun x @unocss/cli src/**/*.rs index.html --out-file style/output.css"]
-command_arguments = ["-c", "npx @unocss/cli src/**/*.rs index.html --out-file style/output.css"]
+command_arguments = ["-c", "npx @unocss/cli src/*.rs index.html --out-file style/output.css"]
