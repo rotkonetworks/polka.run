@@ -1,0 +1,15 @@
+name: Update PolkaVM Dependency
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight
+
+jobs:
+  update-polkavm:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check for new PolkaVM version
+      run: ./scripts/check_polkavm_version.sh
+    - name: Update Cargo.toml and create pull request
+      run: ./scripts/update_cargo_and_pr.sh
