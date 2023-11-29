@@ -8,8 +8,7 @@ name = "polkarun"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-polkavm = "0.2.0"
-# polkavm = { git = "https://github.com/koute/polkavm" }
+polkavm = { git = "https://github.com/koute/polkavm" }
 gloo-net = { version = "0.4", features = ["http"] }
 leptos = { version = "0.5.4", features = ["csr", "nightly", "experimental-islands"] }
 leptos_meta = { version = "0.5.4", features = ["csr", "nightly"] }

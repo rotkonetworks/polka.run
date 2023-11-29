@@ -1,5 +1,4 @@
-mod app;
-use app::*;
+use polkarun::app::App;
 use leptos::*;
 
 pub fn main() {
