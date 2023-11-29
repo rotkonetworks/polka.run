@@ -55,7 +55,7 @@ pub fn Disassembler() -> impl IntoView {
     let (unified_data, set_unified_data) = create_signal(Vec::new());
     let (disassembled_data, set_disassembled_data) = create_signal(String::new());
 
-    let version = "0.2"; // TODO: we should generate this from Cargo.toml instead of hardcoding
+    let version = "0.3"; // TODO: we should generate this from Cargo.toml instead of hardcoding
     let title = format!("polkavm-v{} disassembler", version).to_string();
 
     view! {
