@@ -1,20 +1,20 @@
 [package]
 name = "polkarun"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 
 [dependencies]
 cargo_toml = "0.17.1"
 gloo-net = { version = "0.4", features = ["http"] }
-leptos = { version = "0.5.2", features = ["csr", "nightly"] }
-leptos_meta = { version = "0.5.2", features = ["csr", "nightly"] }
-leptos_router = { version = "0.5.2", features = ["csr", "nightly"] }
+leptos = { version = "0.5.4", features = ["csr", "nightly"] }
+leptos_meta = { version = "0.5.4", features = ["csr", "nightly"] }
+leptos_router = { version = "0.5.4", features = ["csr", "nightly"] }
 polkavm = "0.2.0"
-js-sys = "0.3.65"
-web-sys = { version = "0.3.65", features = ["HtmlInputElement", "DataTransfer", "DragEvent", "File", "FileList", "FileReader", "ProgressEvent"] }
+js-sys = "0.3.66"
+web-sys = { version = "0.3.66", features = ["HtmlInputElement", "DataTransfer", "DragEvent", "File", "FileList", "FileReader", "ProgressEvent"] }
 
 # dependecies for client (enable when csr or hydrate set)
-wasm-bindgen = { version = "0.2.88" }
+wasm-bindgen = { version = "0.2.89" }
 log = "0.4.20"
 console_log = { version = "1"}
 console_error_panic_hook = { version = "0.1.7"}
