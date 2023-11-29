@@ -25,8 +25,7 @@
 .mt-6{margin-top:1.5rem;}
 .inline-block{display:inline-block;}
 .hidden{display:none;}
-.w-3\/10{width:30%;}
-.w-7\/10{width:70%;}
+.w-5\/10{width:50%;}
 .flex{display:flex;}
 .flex-1{flex:1 1 0%;}
 .flex-col{flex-direction:column;}
@@ -76,5 +75,9 @@
 .md\:text-4xl{font-size:2.25rem;line-height:2.5rem;}
 }
 @media (min-width: 1024px){
+.lg\:mx-auto{margin-left:auto;margin-right:auto;}
 .lg\:text-5xl{font-size:3rem;line-height:1;}
+}
+@media (min-width: 1280px){
+.xl\:text-lg{font-size:1.125rem;line-height:1.75rem;}
 }

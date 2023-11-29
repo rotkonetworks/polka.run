@@ -891,24 +891,24 @@ imports.wbg.__wbindgen_memory = function() {
     const ret = wasm.memory;
     return addHeapObject(ret);
 };
-imports.wbg.__wbindgen_closure_wrapper587 = function(arg0, arg1, arg2) {
+imports.wbg.__wbindgen_closure_wrapper561 = function(arg0, arg1, arg2) {
     const ret = makeMutClosure(arg0, arg1, 107, __wbg_adapter_36);
     return addHeapObject(ret);
 };
-imports.wbg.__wbindgen_closure_wrapper589 = function(arg0, arg1, arg2) {
+imports.wbg.__wbindgen_closure_wrapper563 = function(arg0, arg1, arg2) {
     const ret = makeMutClosure(arg0, arg1, 109, __wbg_adapter_39);
     return addHeapObject(ret);
 };
-imports.wbg.__wbindgen_closure_wrapper4823 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 456, __wbg_adapter_42);
+imports.wbg.__wbindgen_closure_wrapper4788 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 461, __wbg_adapter_42);
     return addHeapObject(ret);
 };
-imports.wbg.__wbindgen_closure_wrapper5833 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 535, __wbg_adapter_45);
+imports.wbg.__wbindgen_closure_wrapper5798 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 540, __wbg_adapter_45);
     return addHeapObject(ret);
 };
-imports.wbg.__wbindgen_closure_wrapper10286 = function(arg0, arg1, arg2) {
-    const ret = makeMutClosure(arg0, arg1, 560, __wbg_adapter_48);
+imports.wbg.__wbindgen_closure_wrapper10251 = function(arg0, arg1, arg2) {
+    const ret = makeMutClosure(arg0, arg1, 565, __wbg_adapter_48);
     return addHeapObject(ret);
 };
 
@@ -950,7 +950,7 @@ async function __wbg_init(input) {
     if (wasm !== undefined) return wasm;
 
     if (typeof input === 'undefined') {
-        input = new URL('polka-run-2d85d70b169d143_bg.wasm', import.meta.url);
+        input = new URL('polka-run-39d0428ff7b72dec_bg.wasm', import.meta.url);
     }
     const imports = __wbg_get_imports();
 
