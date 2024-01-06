@@ -11,20 +11,21 @@ webgui for polkavm disassembler
 $ cargo install --force cargo-make trunk
 ```
 
-2. Serve `en`, `zh-CN`, `zh-TW` or other languages
+2. Serve
 
 ```bash
 $ cargo make dev
 ```
 
-3. Build
+3. Build wasm binary
 
 ```bash
 $ cargo make build
 ```
 
 [leptos]: https://github.com/leptos-rs/leptos
-[`leptos-query`]: https://github.com/nicoburniske/leptos_query
+[`leptos-query`]: https://github.com/nicoburniske/leptos_query/tree/main/examples
+['leptos-use']: https://github.com/Synphonyte/leptos-use/tree/main/examples
 [`cargo-make`]: https://github.com/sagiegurari/cargo-make
 [`trunk`]: https://github.com/thedodd/trunk
 
