@@ -1,16 +1,68 @@
 use leptos::*;
 use polkavm::ProgramBlob;
-
 use crate::file_upload::FileUploadComponent;
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Deserialize, Serialize)]
+enum MenuItemType {
+    RegularItem,
+    SubMenu(Vec<MenuItem>),
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+struct MenuItem {
+    label: String,
+    item_type: MenuItemType,
+    action: Option<String>,
+}
+
+struct Menu {
+    items: Vec<MenuItem>,
+}
+
+#[component]
+pub fn MenuButton(item: &MenuItem) -> impl IntoView {
+    let (dropdown_visible, set_dropdown_visible) = create_signal(false);
+
+    let toggle_dropdown = {
+        let dropdown_visible = dropdown_visible.clone();
+        move |_| set_dropdown_visible.set(!*dropdown_visible)
+    };
+
+    view! {
+        <div class="menu-item">
+            <button on:click=toggle_dropdown>{ item.label.clone() }</button>
+            if *dropdown_visible {
+                match &item.item_type {
+                    MenuItemType::SubMenu(sub_items) => {
+                        view! {
+                            <div class="dropdown-content">
+                                { for sub_items.iter().map(|sub_item| view! { <MenuButton item=sub_item /> }) }
+                            </div>
+                        }
+                    }
+                    _ => view! { }
+                }
+            }
+        </div>
+    }
+}
+
 
 #[component]
 pub fn Disassembler() -> impl IntoView {
-    fn unified_representation(data: &[u8]) -> Vec<String> {
+
+    pub struct DisassemblyLine {
+        pub offset_part: String,
+        pub hex_part: String,
+        pub text_part: String,
+    }
+
+    fn unified_representation(data: &[u8]) -> Vec<DisassemblyLine> {
+        let mut offset = 0usize; // Initialize the offset outside the map
+
         data.chunks(8)
             .map(|chunk| {
-                // Initialize the strings with a capacity that avoids further allocation.
-                // 23 for hex_part: 2 chars per byte and 1 space, except after the last byte.
-                // 8 for text_part: 1 char per byte.
                 let mut hex_part = String::with_capacity(23);
                 let mut text_part = String::with_capacity(8);
 
@@ -23,6 +75,12 @@ pub fn Disassembler() -> impl IntoView {
                     text_part.push(if (32..=126).contains(&byte) { byte as char } else { '.' });
                 }
 
+                // Format the offset as a 6-digit hexadecimal number.
+                let offset_hex = format!("{:06x}", offset);
+
+                // Increment the offset by the chunk size (8 bytes).
+                offset += 8;
+
                 // Trim the trailing space from the hex_part and pad if necessary.
                 let hex_part = hex_part.trim_end().to_string();
                 let hex_part_padded = format!("{:23}", hex_part);
@@ -30,7 +88,11 @@ pub fn Disassembler() -> impl IntoView {
                 // Pad text_part if necessary.
                 let text_part_padded = format!("{:<8}", text_part);
 
-                format!("{} {}", hex_part_padded, text_part_padded)
+                DisassemblyLine {
+                    offset_part: offset_hex,
+                    hex_part: hex_part_padded,
+                    text_part: text_part_padded,
+                }
             })
             .collect()
     }
@@ -59,48 +121,56 @@ pub fn Disassembler() -> impl IntoView {
         Ok(result)
     }
 
-    let (unified_data, set_unified_data) = create_signal(Vec::new());
-    let (disassembled_data, set_disassembled_data) = create_signal(String::new());
 
-    let version = "0.3"; // TODO: fetch from github repo/cargo instead?
-    let title = format!("polkavm-v{} disassembler", version).to_string();
+    let title = format!("polkavm disassembler").to_string();
 
-    view! {
-        <div class="flex flex-col container lg:mx-auto">
-        <div class="p-4 shadow-md">
-        <h2 class="text-4xl text-center">{title}</h2>
-        <div class="text-center text-gray-500 text-sm">
-        <FileUploadComponent on_file_uploaded=move |data_option| {
-        if let Some(data) = data_option {
-        set_unified_data(unified_representation(&data));
-        match disassemble_into(&data) {
-        Ok(disassembled) => set_disassembled_data(disassembled),
-        Err(error) => set_disassembled_data(error.to_string())
+    // Improved state management with signals
+    let (disassembled_data, set_disassembled_data) = create_signal(Vec::<T>::new());
+
+
+    pub fn MenuButton() -> impl IntoView {
+        view! {
+            <div
+                role="menuitem"
+                class="flex items-center space-x-1 px-2 py-1 rounded-md border hover:bg-gray-200 dark:hover:bg-gray-700"
+                tabindex="-1"
+                style="outline:none"
+            >
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    {label}
+                </div>
+            </div>
         }
+    }
+
+    #[component]
+    fn MainPageLayout() -> impl IntoView {
+        view! {
+            <div class="h-screen w-full flex flex-col">
+                <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
+                    <div
+                    >
+                    <nav
+                        role="menubar"
+                        class="flex h-10 items-center space-x-1 rounded-md border bg-background p-1"
+                        tabindex="0"
+                        data-orientation="horizontal"
+                        style="outline:none"
+                    >
+                        { for menu.items.iter().map(|item| view! { <MenuButton item=item /> }) }
+                    </nav>
+                        <MenuButton label="File"/>
+                        <MenuButton label="Settings"/>
+                        <MenuButton label="View"/>
+                        <MenuButton label="Compare"/>
+                        <MenuButton label="Info"/>
+                    </div>
+                </header>
+                <main class="flex flex-1 w-full">
+                    incoming
+                </main>
+            </div>
         }
-        }/>
-        </div>
-        <Show when=move || !unified_data().is_empty()>
-        <div class="flex flex-1 overflow-hidden">
-        <div class="w-5/10 overflow-auto">
-        <h3 class="mb-4 text-2xl">"Binary data:"</h3>
-        <pre class="border border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
-        {
-        move || unified_data().iter().map(|line| view! {
-        <div class="py-1 font-mono text-xs md:text-md xl:text-lg">{ line.clone() }</div>
-        }).collect::<Vec<_>>()
-        }
-        </pre>
-        </div>
-        <div class="w-5/10 overflow-auto">
-        <h3 class="mb-4 text-2xl">"Instructions:"</h3>
-        <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
-        { move || disassembled_data().clone() }
-        </pre>
-        </div>
-        </div>
-        </Show>
-        </div>
-        </div>
     }
 }
