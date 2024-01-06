@@ -10,14 +10,19 @@ webgui for polkavm disassembler
 ```bash
 $ cargo install --force cargo-make trunk
 ```
-
-2. Serve
+2. Install nodejs dependencies
 
 ```bash
-$ cargo make dev
+cd app && npm install
+
+3. Serve
+
+```bash
+popd
+cargo make dev
 ```
 
-3. Build wasm binary
+4. Build wasm binary
 
 ```bash
 $ cargo make build
