@@ -1,0 +1,27 @@
+[workspace]
+members = [
+  "app",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Rotko Networks <hq@roko.net>"]
+edition = "2021"
+homepage = "https://polka.run/"
+documentation = "https://github.com/rotkonetworks/polka.run"
+repository = "https://github.com/rotkonetworks/polka.run"
+license = "MIT"
+
+[workspace.dependencies]
+serde = "1.0"
+serde_json = "1.0"
+
+[profile.bench]
+debug = true
+
+[profile.dev]
+split-debuginfo = "unpacked"
+
+[profile.dev.package."*"]
+opt-level = 2
