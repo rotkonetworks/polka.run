@@ -1,0 +1,15 @@
+{
+  "name": "viz-rs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/rotkonetworks/polka.run",
+  "author": "hitchhooker <tommi@rotko.net>",
+  "license": "MIT",
+  "publish": false,
+  "devDependencies": {
+    "@iconify-json/lucide": "1.1.132",
+    "@unocss/cli": "0.56.5",
+    "inter-ui": "3.19.3",
+    "unocss": "0.56.5"
+  }
+}

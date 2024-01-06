@@ -1,5 +1,24 @@
+[build]
+target = "app/index.html"
+dist = "dist"
+
 [[hooks]]
-stage = "pre_build"
-command = "sh"
-#command_arguments = ["-c", "bun x @unocss/cli src/**/*.rs index.html --out-file style/output.css"]
-command_arguments = ["-c", "npx @unocss/cli src/*.rs index.html --out-file style/output.css"]
+stage = "post_build"
+command = "node"
+command_arguments = [
+  "app/node_modules/.bin/unocss",
+  "-c",
+  "app/uno.config.ts",
+  "app/src/**/*.rs",
+  "-o",
+  "app/style/output.css",
+]
+
+[watch]
+watch = ["app/index.scss", "app/src"]
+
+[tools]
+wasm_bindgen = "0.2.87"
+
+[serve]
+address = "0.0.0.0"
