@@ -1,7 +1,0 @@
-MainMenu(
-    items: [
-        { label: "Item1", item_type: "RegularItem", action: Some("Action1") },
-        { label: "Item2", item_type: "RegularItem", action: None },
-    ],
-)
-
