@@ -1,7 +1,10 @@
 use leptos::*;
 use polkavm::ProgramBlob;
-use crate::file_upload::FileUploadComponent;
+//use crate::file_upload::FileUploadComponent;
 use serde::{Deserialize, Serialize};
+use ron::de::from_str;
+use std::fs;
+use std::fmt::Write;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 enum MenuItemType {
@@ -16,28 +19,66 @@ struct MenuItem {
     action: Option<String>,
 }
 
+#[derive(Clone, Debug, Deserialize, Serialize)]
 struct MainMenu {
     items: Vec<MenuItem>,
 }
 
-
-
 #[component]
-fn MenuButton(item: MenuItem) -> impl IntoView {
-    view! {
-        <div
-            role="menuitem"
-            class="flex items-center space-x-1 px-2 py-1 rounded-md border hover:bg-gray-200 dark:hover:bg-gray-700"
-            tabindex="-1"
-            style="outline:none"
-        >
-            <div class="w-3 h-3 rounded-full bg-red-500"></div>
-            <div class="text-sm font-medium text-gray-700 dark:text-gray-200">
-                {item.label}
+fn MainPageLayout() -> impl IntoView {
+    fn load_menu() -> Result<MainMenu, ron::Error> {
+        let content = fs::read_to_string("disassembler.ron")
+            .expect("Failed to read disassembler.ron");
+        from_str(&content).map_err(|e| e.into())
+    }
+
+    let menu = load_menu().expect("Failed to load menu");
+    // Define the MenuButton component
+    #[component]
+    fn MenuButton(item: MenuItem) -> impl IntoView {
+        view! {
+            <div
+                role="menuitem"
+                class="flex items-center space-x-1 px-2 py-1 rounded-md border hover:bg-gray-200 dark:hover:bg-gray-700"
+                tabindex="-1"
+                style="outline:none"
+            >
+                <div class="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    {&item.label}
+                </div>
             </div>
+        }
+    }
+
+    view! {
+        <div class="h-screen w-full flex flex-col">
+            <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
+                <div>
+                    <nav
+                        role="menubar"
+                        class="flex h-10 items-center space-x-1 rounded-md border bg-background p-1"
+                        tabindex="0"
+                        data-orientation="horizontal"
+                        style="outline:none"
+                    >
+                        <For
+                            each=move || menu.items.clone().into_iter()
+                            key=|item| item.label.clone()
+                            children=move |item| {
+                                view! { <MenuButton item=item.clone() /> }
+                            }
+                        />
+                    </nav>
+                </div>
+            </header>
+            <main class="flex flex-1 w-full">
+                <Disassembler />
+            </main>
         </div>
     }
 }
+
+
 
 
 #[component]
@@ -59,7 +100,6 @@ pub fn Disassembler() -> impl IntoView {
 
                 for &byte in chunk {
                     // Write the hex representation directly into hex_part.
-                    use std::fmt::Write;
                     write!(hex_part, "{:02x} ", byte).expect("Writing to a String should never fail");
 
                     // Append ASCII representation or '.' to text_part.
@@ -110,58 +150,5 @@ pub fn Disassembler() -> impl IntoView {
             }
         }
         Ok(result)
-    }
-
-
-    let title = format!("polkavm disassembler").to_string();
-
-    // Improved state management with signals
-    let (disassembled_data, set_disassembled_data) = create_signal(Vec::<T>::new());
-
-
-    pub fn MenuButton() -> impl IntoView {
-        view! {
-            <div
-                role="menuitem"
-                class="flex items-center space-x-1 px-2 py-1 rounded-md border hover:bg-gray-200 dark:hover:bg-gray-700"
-                tabindex="-1"
-                style="outline:none"
-            >
-                <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                <div class="text-sm font-medium text-gray-700 dark:text-gray-200">
-                    {label}
-                </div>
-            </div>
-        }
-    }
-
-    #[component]
-    fn MainPageLayout() -> impl IntoView {
-        view! {
-            <div class="h-screen w-full flex flex-col">
-                <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
-                    <div
-                    >
-                    <nav
-                        role="menubar"
-                        class="flex h-10 items-center space-x-1 rounded-md border bg-background p-1"
-                        tabindex="0"
-                        data-orientation="horizontal"
-                        style="outline:none"
-                    >
-                        { for menu.items.iter().map(|item| view! { <MenuButton item=item /> }) }
-                    </nav>
-                        <MenuButton label="File"/>
-                        <MenuButton label="Settings"/>
-                        <MenuButton label="View"/>
-                        <MenuButton label="Compare"/>
-                        <MenuButton label="Info"/>
-                    </div>
-                </header>
-                <main class="flex flex-1 w-full">
-                    incoming
-                </main>
-            </div>
-        }
     }
 }

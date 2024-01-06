@@ -3,28 +3,20 @@ RUSTFLAGS = "--cfg=web_sys_unstable_apis"
 [config]
 default_to_workspace = false
 
-[tasks.init]
-command = "mkdir"
-args = ["-p", "dist/en/", "dist/es/", "dist/zh-CN/"]
-
-[tasks.doc-en]
-command = "cargo"
-args = ["run", "--bin", "gen", "--", "-i", "en", "-o", "app/docs/en"]
-
-[tasks.doc-es]
-command = "cargo"
-args = ["run", "--bin", "gen", "--", "-i", "es", "-o", "app/docs/es"]
-
-[tasks.doc-zh-CN]
-command = "cargo"
-args = ["run", "--bin", "gen", "--", "-i", "zh-CN", "-o", "app/docs/zh-CN"]
+# [tasks.init]
+# command = "mkdir"
+# args = ["-p", "dist/en/"]
+#
+# [tasks.doc-en]
+# command = "cargo"
+# args = ["run", "--bin", "gen", "--", "-i", "en", "-o", "app/docs/en"]
 
 [tasks.dev]
-dependencies = ["init", "doc-en", "doc-es", "doc-zh-CN"]
+#dependencies = ["init", "doc-en"]
 command = "trunk"
-args = ["--config", "Trunk.toml", "serve", "--features", "github", "--open"]
+args = ["--config", "Trunk.toml", "serve", "--open"]
 
 [tasks.build]
-dependencies = ["init", "doc-en", "doc-es", "doc-zh-CN"]
+#dependencies = ["init", "doc-en"]
 command = "trunk"
-args = ["--config", "Trunk.toml", "build", "--features", "github", "--release"]
+args = ["--config", "Trunk.toml", "build", "--release"]
