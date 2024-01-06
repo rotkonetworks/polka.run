@@ -1,8 +1,8 @@
 use leptos::*;
 use polkavm::ProgramBlob;
-//use crate::file_upload::FileUploadComponent;
+// use crate::file_upload::FileUploadComponent;
 use serde::{Deserialize, Serialize};
-use ron::de::from_str;
+// use ron::de::from_str;
 use std::fmt::Write;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -44,13 +44,104 @@ fn MenuButton(item: MenuItem) -> impl IntoView {
 // MainMenu
 #[component]
 fn MainMenu() -> impl IntoView {
-    fn load_menu() -> Result<MainMenu, ron::Error> {
-        let content = include_str!("pages/disassembler.ron");
-        println!("{}", content);
-        from_str(content).map_err(|e| e.into())
-    }
+    // fn load_menu() -> Result<MainMenu, ron::Error> {
+    //     let content = include_str!("pages/disassembler.ron");
+    //     println!("{}", content);
+    //     from_str(content).map_err(|e| e.into())
+    // }
+    //
+    // let menu = load_menu().expect("Failed to load menu");
 
-    let menu = load_menu().expect("Failed to load menu");
+    let menu = MainMenu {
+        items: vec![
+            MenuItem {
+                label: "File".to_string(),
+                item_type: MenuItemType::SubMenu(vec![
+                    MenuItem {
+                        label: "Load New".to_string(),
+                        item_type: MenuItemType::RegularItem,
+                        action: Some("file_load_new".to_string()),
+                    },
+                    MenuItem {
+                        label: "Unload All".to_string(),
+                        item_type: MenuItemType::RegularItem,
+                        action: Some("file_unload_all".to_string()),
+                    },
+                ]),
+                action: None,
+            },
+            MenuItem {
+                label: "Settings".to_string(),
+                item_type: MenuItemType::RegularItem,
+                action: None,
+            },
+            MenuItem {
+                label: "View".to_string(),
+                item_type: MenuItemType::SubMenu(vec![
+                    MenuItem {
+                        label: "Style".to_string(),
+                        item_type: MenuItemType::SubMenu(vec![
+                            MenuItem {
+                                label: "System Default".to_string(),
+                                item_type: MenuItemType::RegularItem,
+                                action: Some("style_system_default".to_string()),
+                            },
+                            MenuItem {
+                                label: "Day Mode".to_string(),
+                                item_type: MenuItemType::RegularItem,
+                                action: Some("style_day_mode".to_string()),
+                            },
+                            MenuItem {
+                                label: "Dark Mode".to_string(),
+                                item_type: MenuItemType::RegularItem,
+                                action: Some("style_dark_mode".to_string()),
+                            },
+                        ]),
+                        action: None,
+                    },
+                    MenuItem {
+                        label: "Zoom".to_string(),
+                        item_type: MenuItemType::SubMenu(vec![
+                            MenuItem {
+                                label: "Zoom: {zoom_level}%".to_string(),
+                                item_type: MenuItemType::RegularItem,
+                                action: None,
+                            },
+                            MenuItem {
+                                label: "Zoom in (+)".to_string(),
+                                item_type: MenuItemType::RegularItem,
+                                action: Some("zoom_in".to_string()),
+                            },
+                            MenuItem {
+                                label: "Zoom out (-)".to_string(),
+                                item_type: MenuItemType::RegularItem,
+                                action: Some("zoom_out".to_string()),
+                            },
+                            MenuItem {
+                                label: "Default Size".to_string(),
+                                item_type: MenuItemType::RegularItem,
+                                action: Some("zoom_default".to_string()),
+                            },
+                        ]),
+                        action: None,
+                    },
+                ]),
+                action: None,
+            },
+            MenuItem {
+                label: "Compare".to_string(),
+                item_type: MenuItemType::RegularItem,
+                action: None,
+            },
+            MenuItem {
+                label: "Info".to_string(),
+                item_type: MenuItemType::RegularItem,
+                action: None,
+            },
+        ],
+    };
+
+
 
     view! {
         <nav
@@ -151,7 +242,6 @@ pub fn Disassembler() -> impl IntoView {
                 </div>
             </header>
             <main class="flex flex-1 w-full">
-                <p>lol</p>
             </main>
         </div>
     }
