@@ -11,6 +11,7 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     view! {
+        <body class="h-screen w-screen">
         <Navigation/>
         <Router>
         <Routes>
@@ -18,5 +19,6 @@ pub fn App() -> impl IntoView {
         <Route path="disassembler" view=  move || view! { <Disassembler/> }/>
         </Routes>
         </Router>
+        </body>
     }
 }

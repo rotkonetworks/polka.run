@@ -418,10 +418,11 @@ pub fn Disassembler() -> impl IntoView {
                         </button>
                         </div>
                     </header>
-                    <div class="text-sm p-4">
-                        <div class="w-7/100">Offset</div>
-                        <div class="w-40/100">HEX</div>
-                        <div class="w-53/100">Assembly</div>
+                    <div class="text-sm p-4 flex flex-row">
+                        <div class="w-7/100 flex"><h3>Offset</h3></div>
+                        <div class="w-23/100 flex"><h3>HEX</h3></div>
+                        <div class="w-33/100"><h3>Assembly</h3></div>
+                        <div class="w-33/100"><h3>HintGPT</h3></div>
                     </div>
                     </div>
                 </div>
