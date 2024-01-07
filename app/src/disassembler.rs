@@ -23,20 +23,47 @@ struct MainMenu {
     items: Vec<MenuItem>,
 }
 
+#[component]
+fn SubMenu(items: Vec<MenuItem>) -> impl IntoView {
+    view! {
+        <div class="submenu">
+            <ul>
+                <li>
+                    <For each=items>
+                        { |item| view! { <MenuButton item={item.clone()} /> } }
+                    </For>
+                </li>
+            </ul>
+        </div>
+    }
+}
 
-// MenuButton
 #[component]
 fn MenuButton(item: MenuItem) -> impl IntoView {
+    let (menu_toggle, set_menu_toggle) = create_signal(false);
+    let toggle_menu = move || {
+        set_menu_toggle.update(|open| *open = !*open);
+    };
+
     view! {
         <div
             role="menuitem"
             class="flex items-center space-x-1 px-2 py-1 rounded-md border hover:bg-gray-200 dark:hover:bg-gray-700"
             tabindex="-1"
             style="outline:none"
+            on:click=|_| match item.item_type {
+                MenuItemType::SubMenu(_) => toggle_menu(),
+                _ => (),
+            }
         >
             <div class="text-sm font-medium text-gray-700 dark:text-gray-200">
                 {&item.label}
             </div>
+            {if let MenuItemType::SubMenu(ref sub_items) = item.item_type {
+                if *menu_toggle.get() {
+                    view! { <SubMenu items={sub_items.clone()} /> }
+                }
+            }}
         </div>
     }
 }
