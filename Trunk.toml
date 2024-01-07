@@ -18,7 +18,7 @@ command_arguments = [
 watch = ["app/index.scss", "app/src"]
 
 [tools]
-wasm_bindgen = "0.2.87"
+wasm_bindgen = "0.2.89"
 
 [serve]
 address = "0.0.0.0"
