@@ -1,9 +1,8 @@
 use leptos::*;
 use polkavm::ProgramBlob;
-// use crate::file_upload::FileUploadComponent;
+use crate::file_upload::FileUploadComponent;
 use serde::{Deserialize, Serialize};
 // use ron::de::from_str;
-use std::fmt::Write;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 enum MenuItemType {
@@ -15,7 +14,6 @@ enum MenuItemType {
 struct MenuItem {
     label: String,
     item_type: MenuItemType,
-    action: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -23,21 +21,54 @@ struct MainMenu {
     items: Vec<MenuItem>,
 }
 
-
-// MenuButton
 #[component]
 fn MenuButton(item: MenuItem) -> impl IntoView {
-    let (menu_toggle, set_menu_toggle) = create_signal(false);
+    // let (toggle_submenu, set_toggle_submenu) = create_signal(false);
+
+    // let item_type = item.item_type.clone();
+    // let toggle_submenu_handler = move || {
+    //     match item_type {
+    //         MenuItemType::SubMenu(_) => {
+    //             set_toggle_submenu(!toggle_submenu.get());
+    //         }
+    //         _ => {}
+    //     }
+    // };
+
     view! {
         <div
             role="menuitem"
-            class="flex items-center space-x-1 px-2 py-1 rounded-md border hover:bg-gray-200 dark:hover:bg-gray-700"
-            tabindex="-1"
-            style="outline:none"
+            class="menu-button"
+     //       onclick=toggle_submenu_handler
         >
-            <div class="text-sm font-medium text-gray-700 dark:text-gray-200">
-                {&item.label}
-            </div>
+            {&item.label}
+            // <Show when=move || match &item.item_type {
+            //     MenuItemType::SubMenu(_) => true,
+            //     _ => false,
+            // }>
+            //
+            //     <div
+            //         role="menu"
+            //         class="menu"
+            //         tabindex="-1"
+            //         aria-orientation="vertical"
+            //         aria-labelledby="radix-:R1mqrnnnlaH1:"
+            //         style="outline:none"
+            //     >
+            //         <ul>
+            //         <For
+            //             each=move || match &item.item_type {
+            //                 MenuItemType::SubMenu(items) => items.clone().into_iter(),
+            //                 _ => vec![].into_iter(),
+            //             }
+            //             key=|item| item.label.clone()
+            //             children=move |item| {
+            //                 view! { <li><MenuButton item=item.clone() /></li> }
+            //             }
+            //         />
+            //         </ul>
+            //     </div>
+            // </Show>
         </div>
     }
 }
@@ -61,20 +92,16 @@ fn MainMenu() -> impl IntoView {
                     MenuItem {
                         label: "Load New".to_string(),
                         item_type: MenuItemType::RegularItem,
-                        action: Some("file_load_new".to_string()),
                     },
                     MenuItem {
                         label: "Unload All".to_string(),
                         item_type: MenuItemType::RegularItem,
-                        action: Some("file_unload_all".to_string()),
                     },
                 ]),
-                action: None,
             },
             MenuItem {
                 label: "Settings".to_string(),
                 item_type: MenuItemType::RegularItem,
-                action: None,
             },
             MenuItem {
                 label: "View".to_string(),
@@ -85,20 +112,16 @@ fn MainMenu() -> impl IntoView {
                             MenuItem {
                                 label: "System Default".to_string(),
                                 item_type: MenuItemType::RegularItem,
-                                action: Some("style_system_default".to_string()),
                             },
                             MenuItem {
                                 label: "Day Mode".to_string(),
                                 item_type: MenuItemType::RegularItem,
-                                action: Some("style_day_mode".to_string()),
                             },
                             MenuItem {
                                 label: "Dark Mode".to_string(),
                                 item_type: MenuItemType::RegularItem,
-                                action: Some("style_dark_mode".to_string()),
                             },
                         ]),
-                        action: None,
                     },
                     MenuItem {
                         label: "Zoom".to_string(),
@@ -106,43 +129,33 @@ fn MainMenu() -> impl IntoView {
                             MenuItem {
                                 label: "Zoom: {zoom_level}%".to_string(),
                                 item_type: MenuItemType::RegularItem,
-                                action: None,
                             },
                             MenuItem {
                                 label: "Zoom in (+)".to_string(),
                                 item_type: MenuItemType::RegularItem,
-                                action: Some("zoom_in".to_string()),
                             },
                             MenuItem {
                                 label: "Zoom out (-)".to_string(),
                                 item_type: MenuItemType::RegularItem,
-                                action: Some("zoom_out".to_string()),
                             },
                             MenuItem {
                                 label: "Default Size".to_string(),
                                 item_type: MenuItemType::RegularItem,
-                                action: Some("zoom_default".to_string()),
                             },
                         ]),
-                        action: None,
                     },
                 ]),
-                action: None,
             },
             MenuItem {
                 label: "Compare".to_string(),
                 item_type: MenuItemType::RegularItem,
-                action: None,
             },
             MenuItem {
                 label: "Info".to_string(),
                 item_type: MenuItemType::RegularItem,
-                action: None,
             },
         ],
     };
-
-
 
     view! {
         <nav
@@ -163,38 +176,26 @@ fn MainMenu() -> impl IntoView {
     }
 }
 
-
 // Main component
-#[component]
+//#[component]
 pub fn Disassembler() -> impl IntoView {
-
-    pub struct DisassemblyLine {
-        pub offset_part: String,
-        pub hex_part: String,
-        pub text_part: String,
-    }
-
-    fn unified_representation(data: &[u8]) -> Vec<DisassemblyLine> {
-        let mut offset = 0usize; // Initialize the offset outside the map
-
-        data.chunks(8)
+    fn unified_representation(data: &[u8]) -> Vec<String> {
+        data.chunks(16)
             .map(|chunk| {
+                // Initialize the strings with a capacity that avoids further allocation.
+                // 23 for hex_part: 2 chars per byte and 1 space, except after the last byte.
+                // 8 for text_part: 1 char per byte.
                 let mut hex_part = String::with_capacity(23);
                 let mut text_part = String::with_capacity(8);
 
                 for &byte in chunk {
                     // Write the hex representation directly into hex_part.
+                    use std::fmt::Write;
                     write!(hex_part, "{:02x} ", byte).expect("Writing to a String should never fail");
 
                     // Append ASCII representation or '.' to text_part.
                     text_part.push(if (32..=126).contains(&byte) { byte as char } else { '.' });
                 }
-
-                // Format the offset as a 6-digit hexadecimal number.
-                let offset_hex = format!("{:06x}", offset);
-
-                // Increment the offset by the chunk size (8 bytes).
-                offset += 8;
 
                 // Trim the trailing space from the hex_part and pad if necessary.
                 let hex_part = hex_part.trim_end().to_string();
@@ -203,11 +204,7 @@ pub fn Disassembler() -> impl IntoView {
                 // Pad text_part if necessary.
                 let text_part_padded = format!("{:<8}", text_part);
 
-                DisassemblyLine {
-                    offset_part: offset_hex,
-                    hex_part: hex_part_padded,
-                    text_part: text_part_padded,
-                }
+                format!("{} {}", hex_part_padded, text_part_padded)
             })
             .collect()
     }
@@ -235,6 +232,13 @@ pub fn Disassembler() -> impl IntoView {
         }
         Ok(result)
     }
+
+    let (unified_data, set_unified_data) = create_signal(Vec::new());
+    let (disassembled_data, set_disassembled_data) = create_signal(String::new());
+
+    let version = "0.3"; // TODO: fetch from github repo/cargo instead?
+    let _title = format!("polkavm-v{} disassembler", version).to_string();
+
     view! {
         <div class="h-full w-full flex flex-col">
             <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
@@ -288,6 +292,25 @@ pub fn Disassembler() -> impl IntoView {
                 <div class="flex flex-1 overflow-auto">
                 <div class="w-full h-full p-4">
                     <div class="h-3/5 flex flex-row">
+                    <Show when=move || unified_data().is_empty()>
+                    <FileUploadComponent on_file_uploaded=move |data_option| {
+                            if let Some(data) = data_option {
+                            set_unified_data(unified_representation(&data));
+                            match disassemble_into(&data) {
+                            Ok(disassembled) => set_disassembled_data(disassembled),
+                            Err(error) => set_disassembled_data(error.to_string())
+                            }
+                        }
+                    }/>
+                    </Show>
+                    <Show when=move || !unified_data().is_empty()>
+                        <pre class="border border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
+                        {
+                        move || unified_data().iter().map(|line| view! {
+                        <div class="py-1 font-mono text-xs md:text-md xl:text-lg">{ line.clone() }</div>
+                        }).collect::<Vec<_>>()
+                        }
+                        </pre>
                     <div class="md:w-54/100">
                         <div class="overflow-x-auto m-4">
                         <table class="w-full border-collapse table-fixed">
@@ -393,6 +416,7 @@ pub fn Disassembler() -> impl IntoView {
                             </table>
                         </div>
                     </div>
+                    </Show>
                     </div>
                     <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
                     <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
@@ -420,10 +444,23 @@ pub fn Disassembler() -> impl IntoView {
                         </div>
                     </header>
                     <div class="text-sm p-4 flex flex-row">
-                        <div class="w-7/100 flex"><h3>Offset</h3></div>
-                        <div class="w-23/100 flex"><h3>HEX</h3></div>
-                        <div class="w-33/100"><h3>Assembly</h3></div>
-                        <div class="w-33/100"><h3>HintGPT</h3></div>
+                        <div class="w-7/100 flex">
+                            <div class="h-4"><h3>Offset</h3></div>
+                        </div>
+                        <div class="w-23/100 flex">
+                            <div class="h-4"><h3>HEX</h3></div>
+                        </div>
+                        <div class="w-33/100">
+                            <div class="h-4"><h3>Assembly</h3></div>
+                            <Show when=move || !unified_data().is_empty()>
+                            <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
+                            { move || disassembled_data().clone() }
+                            </pre>
+                            </Show>
+                        </div>
+                        <div class="w-33/100">
+                            <div class="h-4"><h3>Hint</h3></div>
+                        </div>
                     </div>
                     </div>
                 </div>

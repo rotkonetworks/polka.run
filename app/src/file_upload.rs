@@ -56,7 +56,7 @@ pub fn FileUploadComponent<F: Fn(Option<Vec<u8>>) + 'static>(on_file_uploaded: F
 
     view! {
         <div
-        class="border-dashed border-4 p-6 mt-6"
+        class="border-dashed border-4 p-6 mt-6 w-full h-full"
         on:drop=on_drop
         on:dragover=move |event: DragEvent| {
         event.prevent_default();
