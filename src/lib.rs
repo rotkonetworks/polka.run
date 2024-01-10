@@ -43,7 +43,7 @@ pub fn App() -> impl IntoView {
 }
 
 #[component]
-pub fn Navigation() -> impl IntoView {
+fn Navigation() -> impl IntoView {
     view! {
         <div class="bg-#552BBF flex justify-between">
             <div>
@@ -74,7 +74,7 @@ pub fn Navigation() -> impl IntoView {
 }
 
 #[component]
-pub fn Home() -> impl IntoView {
+fn Home() -> impl IntoView {
     view! {
         <div class="container p-8 mx-auto">
             <h1 class="text-3xl font-bold text-center md:text-4xl lg:text-5xl">"polka.run"</h1>
@@ -194,7 +194,7 @@ pub fn Home() -> impl IntoView {
 }
 
 #[component]
-pub fn Disassembler() -> impl IntoView {
+fn Disassembler() -> impl IntoView {
     let (unified_data, set_unified_data) = create_signal(Vec::new());
     let (chunk_size, set_chunk_size) = create_signal(0u8);
     let (disassembled_data, set_disassembled_data) = create_signal(String::new());
@@ -704,7 +704,7 @@ fn MenuButton(item: MenuItem) -> impl IntoView {
 }
 
 #[component]
-pub fn FileUploadComponent<F: Fn(Option<Vec<u8>>) + 'static>(on_file_uploaded: F) -> impl IntoView {
+fn FileUploadComponent<F: Fn(Option<Vec<u8>>) + 'static>(on_file_uploaded: F) -> impl IntoView {
     let on_file_uploaded = Rc::new(on_file_uploaded);
 
     let process_file = |on_file_uploaded: Rc<F>, file: File| {
