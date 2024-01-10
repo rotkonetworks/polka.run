@@ -1,21 +1,21 @@
 [build]
-target = "app/index.html"
+target = "index.html"
 dist = "dist"
 
 [[hooks]]
 stage = "post_build"
 command = "node"
 command_arguments = [
-  "app/node_modules/.bin/unocss",
+  "node_modules/.bin/unocss",
   "-c",
-  "app/uno.config.ts",
-  "app/src/**/*.rs",
+  "uno.config.ts",
+  "src/**/*.rs",
   "-o",
-  "app/style/output.css",
+  "style/output.css",
 ]
 
 [watch]
-watch = ["app/index.scss", "app/src"]
+watch = ["index.scss", "src"]
 
 [tools]
 wasm_bindgen = "0.2.89"

@@ -1,4 +1,4 @@
-use polkarun::app::App;
+use polka_run::app::App;
 use leptos::*;
 
 pub fn main() {

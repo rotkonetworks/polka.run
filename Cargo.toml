@@ -1,11 +1,6 @@
-[workspace]
-members = [
-  "app",
-]
-resolver = "2"
-
-[workspace.package]
-version = "0.1.0"
+[package]
+name = "polka-run"
+version = "0.3.0"
 authors = ["Rotko Networks <hq@roko.net>"]
 edition = "2021"
 homepage = "https://polka.run/"
@@ -13,9 +8,106 @@ documentation = "https://github.com/rotkonetworks/polka.run"
 repository = "https://github.com/rotkonetworks/polka.run"
 license = "MIT"
 
-[workspace.dependencies]
-serde = "1.0"
+# [lib]
+# crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+polkavm = { git = "https://github.com/koute/polkavm" }
+gloo-net = { version = "0.5.0", features = ["http"] }
+leptos = { version = "0.5.4", features = ["csr", "nightly", "experimental-islands"] }
+leptos_meta = { version = "0.5.4", features = ["csr", "nightly"] }
+leptos_router = { version = "0.5.4", features = ["csr", "nightly"] }
+reqwest = { version = "0.11.23" }
+toml = "0.8.8"
+js-sys = { version = "0.3.66" }
+web-sys = { version = "0.3.66", features = ["HtmlInputElement", "DataTransfer", "DragEvent", "File", "FileList", "FileReader", "ProgressEvent"] }
+# serialization
+ron = "0.8.1"
+serde = { version = "1", features = ["derive"] }
 serde_json = "1.0"
+# dependecies for client (enable when csr or hydrate set)
+wasm-bindgen = { version = "0.2.89" }
+log = "0.4.20"
+cached = { version = "0.47.0", optional = true }
+console_log = { version = "1"}
+console_error_panic_hook = { version = "0.1.7"}
+
+[features]
+default = ["csr"]
+csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]
+hydrate = [
+  "leptos/hydrate",
+  "leptos_meta/hydrate",
+  "leptos_router/hydrate",
+  # "dep:web-sys",
+]
+
+[package.metadata.cargo-all-features]
+denylist = [
+  "axum",
+  "tower",
+  "tower-http",
+  "tokio",
+  "sqlx",
+  "leptos_axum",
+  "femark",
+]
+skip_feature_sets = [["csr", "ssr"], ["csr", "hydrate"], ["ssr", "hydrate"]]
+
+[profile.wasm-release]
+inherits = "release"
+lto = true
+opt-level = 'z'
+codegen-units = 1
+
+[package.metadata.leptos]
+# The name used by wasm-bindgen/cargo-leptos for the JS/WASM bundle. Defaults to the crate name
+output-name = "polkarun"
+# The site root folder is where cargo-leptos generate all output. WARNING: all content of this folder will be erased on a rebuild. Use it in your server setup.
+site-root = "target/site"
+# The site-root relative folder where all compiled output (JS, WASM and CSS) is written
+# Defaults to pkg
+site-pkg-dir = "pkg"
+# [Optional] The source CSS file. If it ends with .sass or .scss then it will be compiled by dart-sass into CSS. The CSS is optimized by Lightning CSS before being written to <site-root>/<site-pkg>/app.css
+style-file = "style/output.css"
+# [Optional] Files in the asset-dir will be copied to the site-root directory
+assets-dir = "public"
+# The IP and port (ex: 127.0.0.1:3000) where the server serves the content. Use it in your server setup.
+site-addr = "127.0.0.1:3000"
+# The port to use for automatic reload monitoring
+reload-port = 3001
+# [Optional] Command to use when running end2end tests. It will run in the end2end dir.
+end2end-cmd = "npx playwright test"
+#  The browserlist query used for optimizing the CSS.
+browserquery = "defaults"
+# Set by cargo-leptos watch when building with tha tool. Controls whether autoreload JS will be included in the head
+watch = false
+# The environment Leptos will run in, usually either "DEV" or "PROD"
+env = "DEV"
+# The features to use when compiling the bin target
+#
+# Optional. Can be over-ridden with the command line parameter --bin-features
+bin-features = ["ssr"]
+
+# If the --no-default-features flag should be used when compiling the bin target
+#
+# Optional. Defaults to false.
+bin-default-features = false
+
+# The features to use when compiling the lib target
+#
+# Optional. Can be over-ridden with the command line parameter --lib-features
+lib-features = ["hydrate"]
+
+# If the --no-default-features flag should be used when compiling the lib target
+#
+# Optional. Defaults to false.
+lib-default-features = false
+
+# The profile to use for the lib target when compiling for release
+#
+# Optional. Defaults to "release".
+lib-profile-release = "wasm-release"
 
 [profile.bench]
 debug = true
