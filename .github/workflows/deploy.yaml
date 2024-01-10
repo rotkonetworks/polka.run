@@ -46,20 +46,17 @@ jobs:
     - name: Add wasm target
       run: rustup target add wasm32-unknown-unknown
 
-    - name: list source
-      run: ls src/
-
     - name: Build Rust project with trunk
       run: trunk build
 
     - name: Copy CNAME for custom domain
-      run: cp CNAME ./dist/
+      run: cp CNAME ./app/dist/
 
     - name: Create 404 redirection for SPA
-      run: cp dist/index.html dist/404.html
+      run: cp app/dist/index.html app/dist/404.html
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.PAT }}
-        publish_dir: ./dist
+        publish_dir: ./app/dist
