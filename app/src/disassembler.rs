@@ -318,177 +318,177 @@ pub fn Disassembler() -> impl IntoView {
                                     }}
 
                                 </pre>
-                            //     <div class="md:w-54/100">
-                            //         <div class="overflow-x-auto m-4">
-                            //             <table class="w-full border-collapse table-fixed">
-                            //                 <thead>
-                            //                     <tr>
-                            //                         <th class="sticky top-0 bg-gray-300 border p-2 text-left w-1/10">
-                            //                             Offset
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             00
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             01
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             02
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             03
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             04
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             05
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             06
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             07
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             08
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             09
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0A
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0B
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0C
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0D
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             "0E"
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0F
-                            //                         </th>
-                            //                     </tr>
-                            //                 </thead>
-                            //                 <tbody>
-                            //                     <tr>
-                            //                         <td class="border p-2 bg-gray-200">000000</td>
-                            //                         <td class="border p-2">41</td>
-                            //                         <td class="border p-2">42</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                         <td class="border p-2">41</td>
-                            //                         <td class="border p-2">42</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                         <td class="border p-2">41</td>
-                            //                         <td class="border p-2">42</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                         <td class="border p-2">41</td>
-                            //                         <td class="border p-2">42</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                         <td class="border p-2">41</td>
-                            //                         <td class="border p-2">42</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                     </tr>
-                            //                     <tr>
-                            //                         <td class="border p-2 bg-gray-200">000010</td>
-                            //                         <td class="border p-2">11</td>
-                            //                         <td class="border p-2">F2</td>
-                            //                         <td class="border p-2">FF</td>
-                            //                     </tr>
-                            //                 </tbody>
-                            //             </table>
-                            //         </div>
-                            //     </div>
-                            //     <div class="w-46/100">
-                            //         <div class="overflow-x-auto m-4">
-                            //             <table class="w-full border-collapse table-fixed">
-                            //                 <thead>
-                            //                     <tr>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             00
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             01
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             02
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             03
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             04
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             05
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             06
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             07
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             08
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             09
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0A
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0B
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0C
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0D
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             "0E"
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0F
-                            //                         </th>
-                            //                     </tr>
-                            //                 </thead>
-                            //                 <tbody>
-                            //                     <tr>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">F</td>
-                            //                         <td class="border p-2">U</td>
-                            //                         <td class="border p-2">N</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">c</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">v</td>
-                            //                         <td class="border p-2">i</td>
-                            //                         <td class="border p-2">i</td>
-                            //                         <td class="border p-2">.</td>
-                            //                     </tr>
-                            //                     <tr>
-                            //                         <td class="border p-2">11</td>
-                            //                         <td class="border p-2">F2</td>
-                            //                         <td class="border p-2">FF</td>
-                            //                     </tr>
-                            //                 </tbody>
-                            //             </table>
-                            //         </div>
-                            //     </div>
+                                <div class="md:w-54/100">
+                                    <div class="overflow-x-auto m-4">
+                                        <table class="w-full border-collapse table-fixed">
+                                            <thead>
+                                                <tr>
+                                                    <th class="sticky top-0 bg-gray-300 border p-2 text-left w-1/10">
+                                                        Offset
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        00
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        01
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        02
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        03
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        04
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        05
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        06
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        07
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        08
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        09
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0A
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0B
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0C
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0D
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        "0E"
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0F
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="border p-2 bg-gray-200">000000</td>
+                                                    <td class="border p-2">41</td>
+                                                    <td class="border p-2">42</td>
+                                                    <td class="border p-2">4F</td>
+                                                    <td class="border p-2">41</td>
+                                                    <td class="border p-2">42</td>
+                                                    <td class="border p-2">4F</td>
+                                                    <td class="border p-2">41</td>
+                                                    <td class="border p-2">42</td>
+                                                    <td class="border p-2">4F</td>
+                                                    <td class="border p-2">41</td>
+                                                    <td class="border p-2">42</td>
+                                                    <td class="border p-2">4F</td>
+                                                    <td class="border p-2">4F</td>
+                                                    <td class="border p-2">41</td>
+                                                    <td class="border p-2">42</td>
+                                                    <td class="border p-2">4F</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="border p-2 bg-gray-200">000010</td>
+                                                    <td class="border p-2">11</td>
+                                                    <td class="border p-2">F2</td>
+                                                    <td class="border p-2">FF</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="w-46/100">
+                                    <div class="overflow-x-auto m-4">
+                                        <table class="w-full border-collapse table-fixed">
+                                            <thead>
+                                                <tr>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        00
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        01
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        02
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        03
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        04
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        05
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        06
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        07
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        08
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        09
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0A
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0B
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0C
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0D
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        "0E"
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0F
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">F</td>
+                                                    <td class="border p-2">U</td>
+                                                    <td class="border p-2">N</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">c</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">v</td>
+                                                    <td class="border p-2">i</td>
+                                                    <td class="border p-2">i</td>
+                                                    <td class="border p-2">.</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="border p-2">11</td>
+                                                    <td class="border p-2">F2</td>
+                                                    <td class="border p-2">FF</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </Show>
                         </div>
                         <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
