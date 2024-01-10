@@ -46,6 +46,12 @@ jobs:
     - name: Add wasm target
       run: rustup target add wasm32-unknown-unknown
 
+    - name: Install nodejs deps
+      run: |
+        cd app
+        npm install
+        cd ..
+
     - name: Build Rust project with trunk
       run: trunk build
 
