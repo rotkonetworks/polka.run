@@ -36,39 +36,36 @@ fn MenuButton(item: MenuItem) -> impl IntoView {
     // };
 
     view! {
-        <div
-            role="menuitem"
-            class="menu-button"
-     //       onclick=toggle_submenu_handler
-        >
+        <div role="menuitem" class="menu-button">
+            // onclick=toggle_submenu_handler
             {&item.label}
-            // <Show when=move || match &item.item_type {
-            //     MenuItemType::SubMenu(_) => true,
-            //     _ => false,
-            // }>
-            //
-            //     <div
-            //         role="menu"
-            //         class="menu"
-            //         tabindex="-1"
-            //         aria-orientation="vertical"
-            //         aria-labelledby="radix-:R1mqrnnnlaH1:"
-            //         style="outline:none"
-            //     >
-            //         <ul>
-            //         <For
-            //             each=move || match &item.item_type {
-            //                 MenuItemType::SubMenu(items) => items.clone().into_iter(),
-            //                 _ => vec![].into_iter(),
-            //             }
-            //             key=|item| item.label.clone()
-            //             children=move |item| {
-            //                 view! { <li><MenuButton item=item.clone() /></li> }
-            //             }
-            //         />
-            //         </ul>
-            //     </div>
-            // </Show>
+        // <Show when=move || match &item.item_type {
+        // MenuItemType::SubMenu(_) => true,
+        // _ => false,
+        // }>
+        // 
+        // <div
+        // role="menu"
+        // class="menu"
+        // tabindex="-1"
+        // aria-orientation="vertical"
+        // aria-labelledby="radix-:R1mqrnnnlaH1:"
+        // style="outline:none"
+        // >
+        // <ul>
+        // <For
+        // each=move || match &item.item_type {
+        // MenuItemType::SubMenu(items) => items.clone().into_iter(),
+        // _ => vec![].into_iter(),
+        // }
+        // key=|item| item.label.clone()
+        // children=move |item| {
+        // view! { <li><MenuButton item=item.clone() /></li> }
+        // }
+        // />
+        // </ul>
+        // </div>
+        // </Show>
         </div>
     }
 }
@@ -169,9 +166,10 @@ fn MainMenu() -> impl IntoView {
                 each=move || menu.items.clone().into_iter()
                 key=|item| item.label.clone()
                 children=move |item| {
-                    view! { <MenuButton item=item.clone() /> }
+                    view! { <MenuButton item=item.clone()/> }
                 }
             />
+
         </nav>
     }
 }
@@ -243,231 +241,314 @@ pub fn Disassembler() -> impl IntoView {
         <div class="h-full w-full flex flex-col">
             <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
                 <div>
-                    <MainMenu />
+                    <MainMenu/>
                 </div>
             </header>
             <main class="flex flex-1 w-full h-full">
                 <aside class="w-9/100 bg-gray-200 dark:bg-gray-700 p-4 overflow-auto">
-                <nav class="space-y-1">
-                    <a class="flex items-center space-x-2 text-sm" href="#" rel="ugc">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="w-5 h-5"
-                    >
-                        <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
-                    </svg>
-                    <span class="overflow-auto">hello_world.polkavm</span>
-                    </a>
-                    <ul>
-                    <li>export</li>
-                    <li>remove</li>
-                    </ul>
-                    <a class="flex items-center space-x-2 text-sm" href="#" rel="ugc">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="w-5 h-5"
-                    >
-                        <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
-                    </svg>
-                    <span>doom.polkavm</span>
-                    </a>
-                </nav>
+                    <nav class="space-y-1">
+                        <a class="flex items-center space-x-2 text-sm" href="#" rel="ugc">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="w-5 h-5"
+                            >
+                                <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
+                            </svg>
+                            <span class="overflow-auto">hello_world.polkavm</span>
+                        </a>
+                        <ul>
+                            <li>export</li>
+                            <li>remove</li>
+                        </ul>
+                        <a class="flex items-center space-x-2 text-sm" href="#" rel="ugc">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="w-5 h-5"
+                            >
+                                <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
+                            </svg>
+                            <span>doom.polkavm</span>
+                        </a>
+                    </nav>
                 </aside>
                 <div class="flex flex-1 overflow-auto">
-                <div class="w-full h-full p-4">
-                    <div class="h-3/5 flex flex-row">
-                    <Show when=move || unified_data().is_empty()>
-                    <FileUploadComponent on_file_uploaded=move |data_option| {
-                            if let Some(data) = data_option {
-                            set_unified_data(unified_representation(&data));
-                            match disassemble_into(&data) {
-                            Ok(disassembled) => set_disassembled_data(disassembled),
-                            Err(error) => set_disassembled_data(error.to_string())
-                            }
-                        }
-                    }/>
-                    </Show>
-                    <Show when=move || !unified_data().is_empty()>
-                        <pre class="border border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
-                        {
-                        move || unified_data().iter().map(|line| view! {
-                        <div class="py-1 font-mono text-xs md:text-md xl:text-lg">{ line.clone() }</div>
-                        }).collect::<Vec<_>>()
-                        }
-                        </pre>
-                    <div class="md:w-54/100">
-                        <div class="overflow-x-auto m-4">
-                        <table class="w-full border-collapse table-fixed">
-                            <thead>
-                                <tr>
-                                    <th class="sticky top-0 bg-gray-300 border p-2 text-left w-1/10">Offset</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">00</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">01</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">02</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">03</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">04</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">05</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">06</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">07</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">08</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">09</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">0A</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">0B</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">0C</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">0D</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">0F</th>
-                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">10</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="border p-2 bg-gray-200">00000000</td>
-                                    <td class="border p-2">41</td>
-                                    <td class="border p-2">42</td>
-                                    <td class="border p-2">4F</td>
-                                    <td class="border p-2">41</td>
-                                    <td class="border p-2">42</td>
-                                    <td class="border p-2">4F</td>
-                                    <td class="border p-2">41</td>
-                                    <td class="border p-2">42</td>
-                                    <td class="border p-2">4F</td>
-                                    <td class="border p-2">41</td>
-                                    <td class="border p-2">42</td>
-                                    <td class="border p-2">4F</td>
-                                    <td class="border p-2">4F</td>
-                                    <td class="border p-2">41</td>
-                                    <td class="border p-2">42</td>
-                                    <td class="border p-2">4F</td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2 bg-gray-200">00000010</td>
-                                    <td class="border p-2">11</td>
-                                    <td class="border p-2">F2</td>
-                                    <td class="border p-2">FF</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
-                    <div class="w-46/100">
-                        <div class="overflow-x-auto m-4">
-                            <table class="w-full border-collapse table-fixed">
-                                <thead>
-                                    <tr>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">00</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">01</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">02</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">03</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">04</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">05</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">06</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">07</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">08</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">09</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">0A</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">0B</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">0C</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">0D</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">0F</th>
-                                        <th class="sticky top-0 bg-gray-200 border p-2 text-left">10</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border p-2">.</td>
-                                        <td class="border p-2">.</td>
-                                        <td class="border p-2">F</td>
-                                        <td class="border p-2">U</td>
-                                        <td class="border p-2">N</td>
-                                        <td class="border p-2">.</td>
-                                        <td class="border p-2">.</td>
-                                        <td class="border p-2">.</td>
-                                        <td class="border p-2">.</td>
-                                        <td class="border p-2">c</td>
-                                        <td class="border p-2">.</td>
-                                        <td class="border p-2">.</td>
-                                        <td class="border p-2">v</td>
-                                        <td class="border p-2">i</td>
-                                        <td class="border p-2">i</td>
-                                        <td class="border p-2">.</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border p-2">11</td>
-                                        <td class="border p-2">F2</td>
-                                        <td class="border p-2">FF</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    </Show>
-                    </div>
-                    <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
-                    <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
-                        <div
-                        role="menubar"
-                        class="flex h-10 items-center space-x-1 rounded-md border bg-background p-1"
-                        tabindex="0"
-                        data-orientation="horizontal"
-                        style="outline:none"
-                        >
-                        <button
-                            type="button"
-                            role="menuitem"
-                            id="radix-:R1mqrnnnlaH1:"
-                            aria-haspopup="menu"
-                            aria-expanded="false"
-                            data-state="closed"
-                            class="flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
-                            tabindex="-1"
-                            data-orientation="horizontal"
-                            data-radix-collection-item=""
-                        >
-                            Disassembler
-                        </button>
-                        </div>
-                    </header>
-                    <div class="text-sm p-4 flex flex-row">
-                        <div class="w-7/100 flex">
-                            <div class="h-4"><h3>Offset</h3></div>
-                        </div>
-                        <div class="w-23/100 flex">
-                            <div class="h-4"><h3>HEX</h3></div>
-                        </div>
-                        <div class="w-33/100">
-                            <div class="h-4"><h3>Assembly</h3></div>
+                    <div class="w-full h-full p-4">
+                        <div class="h-3/5 flex flex-row">
+                            <Show when=move || unified_data().is_empty()>
+                                <FileUploadComponent on_file_uploaded=move |data_option| {
+                                    if let Some(data) = data_option {
+                                        set_unified_data(unified_representation(&data));
+                                        match disassemble_into(&data) {
+                                            Ok(disassembled) => set_disassembled_data(disassembled),
+                                            Err(error) => set_disassembled_data(error.to_string()),
+                                        }
+                                    }
+                                }/>
+                            </Show>
                             <Show when=move || !unified_data().is_empty()>
-                            <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
-                            { move || disassembled_data().clone() }
-                            </pre>
+                                <pre class="border border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
+
+                                    {move || {
+                                        unified_data()
+                                            .iter()
+                                            .map(|line| {
+                                                view! {
+                                                    <div class="py-1 font-mono text-xs md:text-md xl:text-lg">
+                                                        {line.clone()}
+                                                    </div>
+                                                }
+                                            })
+                                            .collect::<Vec<_>>()
+                                    }}
+
+                                </pre>
+                                <div class="md:w-54/100">
+                                    <div class="overflow-x-auto m-4">
+                                        <table class="w-full border-collapse table-fixed">
+                                            <thead>
+                                                <tr>
+                                                    <th class="sticky top-0 bg-gray-300 border p-2 text-left w-1/10">
+                                                        Offset
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        00
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        01
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        02
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        03
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        04
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        05
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        06
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        07
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        08
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        09
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0A
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0B
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0C
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0D
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0F
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        10
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="border p-2 bg-gray-200">00000000</td>
+                                                    <td class="border p-2">41</td>
+                                                    <td class="border p-2">42</td>
+                                                    <td class="border p-2">4F</td>
+                                                    <td class="border p-2">41</td>
+                                                    <td class="border p-2">42</td>
+                                                    <td class="border p-2">4F</td>
+                                                    <td class="border p-2">41</td>
+                                                    <td class="border p-2">42</td>
+                                                    <td class="border p-2">4F</td>
+                                                    <td class="border p-2">41</td>
+                                                    <td class="border p-2">42</td>
+                                                    <td class="border p-2">4F</td>
+                                                    <td class="border p-2">4F</td>
+                                                    <td class="border p-2">41</td>
+                                                    <td class="border p-2">42</td>
+                                                    <td class="border p-2">4F</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="border p-2 bg-gray-200">00000010</td>
+                                                    <td class="border p-2">11</td>
+                                                    <td class="border p-2">F2</td>
+                                                    <td class="border p-2">FF</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="w-46/100">
+                                    <div class="overflow-x-auto m-4">
+                                        <table class="w-full border-collapse table-fixed">
+                                            <thead>
+                                                <tr>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        00
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        01
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        02
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        03
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        04
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        05
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        06
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        07
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        08
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        09
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0A
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0B
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0C
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0D
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        0F
+                                                    </th>
+                                                    <th class="sticky top-0 bg-gray-200 border p-2 text-left">
+                                                        10
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">F</td>
+                                                    <td class="border p-2">U</td>
+                                                    <td class="border p-2">N</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">c</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">.</td>
+                                                    <td class="border p-2">v</td>
+                                                    <td class="border p-2">i</td>
+                                                    <td class="border p-2">i</td>
+                                                    <td class="border p-2">.</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="border p-2">11</td>
+                                                    <td class="border p-2">F2</td>
+                                                    <td class="border p-2">FF</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </Show>
                         </div>
-                        <div class="w-33/100">
-                            <div class="h-4"><h3>Hint</h3></div>
+                        <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
+                            <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
+                                <div
+                                    role="menubar"
+                                    class="flex h-10 items-center space-x-1 rounded-md border bg-background p-1"
+                                    tabindex="0"
+                                    data-orientation="horizontal"
+                                    style="outline:none"
+                                >
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        id="radix-:R1mqrnnnlaH1:"
+                                        aria-haspopup="menu"
+                                        aria-expanded="false"
+                                        data-state="closed"
+                                        class="flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
+                                        tabindex="-1"
+                                        data-orientation="horizontal"
+                                        data-radix-collection-item=""
+                                    >
+                                        Disassembler
+                                    </button>
+                                </div>
+                            </header>
+                            <div class="text-sm p-4 flex flex-row">
+                                <div class="w-7/100 flex">
+                                    <div class="h-4">
+                                        <h3>Offset</h3>
+                                    </div>
+                                </div>
+                                <div class="w-23/100 flex">
+                                    <div class="h-4">
+                                        <h3>HEX</h3>
+                                    </div>
+                                </div>
+                                <div class="w-33/100">
+                                    <div class="h-4">
+                                        <h3>Assembly</h3>
+                                    </div>
+                                    <Show when=move || !unified_data().is_empty()>
+                                        <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
+                                            {move || disassembled_data().clone()}
+                                        </pre>
+                                    </Show>
+                                </div>
+                                <div class="w-33/100">
+                                    <div class="h-4">
+                                        <h3>Hint</h3>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </div>
-                </div>
                 </div>
                 <div class="offset-bar w-1/100 bg-gray-300 dark:bg-gray-800 p-2 overflow-auto">
-                <div class="w-full h-full bg-gray-400 dark:bg-gray-700 rounded-md"></div>
-                test
+                    <div class="w-full h-full bg-gray-400 dark:bg-gray-700 rounded-md"></div>
+                    test
                 </div>
             </main>
         </div>

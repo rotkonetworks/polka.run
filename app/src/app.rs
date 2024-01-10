@@ -12,13 +12,13 @@ pub fn App() -> impl IntoView {
 
     view! {
         <body class="h-screen w-screen">
-        <Navigation/>
-        <Router>
-        <Routes>
-        <Route path="" view=  move || view! { <Home/> }/>
-        <Route path="disassembler" view=  move || view! { <Disassembler/> }/>
-        </Routes>
-        </Router>
+            <Navigation/>
+            <Router>
+                <Routes>
+                    <Route path="" view=move || view! { <Home/> }/>
+                    <Route path="disassembler" view=move || view! { <Disassembler/> }/>
+                </Routes>
+            </Router>
         </body>
     }
 }

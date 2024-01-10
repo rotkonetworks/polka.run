@@ -8,6 +8,6 @@ pub fn main() {
     log::debug!("csr mode - mounting to body");
 
     mount_to_body(|| {
-        view! { <App /> }
+        view! { <App/> }
     });
 }
