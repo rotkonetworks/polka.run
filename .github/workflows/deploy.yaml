@@ -23,6 +23,18 @@ jobs:
           target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
+    - name: Install Node.js and npm
+      run: |
+        curl -sL https://deb.nodesource.com/setup_18.x | bash -
+        apt-get install -y nodejs
+        apt-get install -y npm
+
+    - name: Install nodejs deps
+      run: |
+        cd app
+        npm install
+        cd ..
+
     - name: Install minimal nightly with clippy and rustfmt
       uses: actions-rs/toolchain@v1
       with:
@@ -46,23 +58,17 @@ jobs:
     - name: Add wasm target
       run: rustup target add wasm32-unknown-unknown
 
-    - name: Install nodejs deps
-      run: |
-        cd app
-        npm install
-        cd ..
-
     - name: Build Rust project with trunk
       run: trunk build
 
     - name: Copy CNAME for custom domain
-      run: cp CNAME ./app/dist/
+      run: cp CNAME ./dist/
 
     - name: Create 404 redirection for SPA
-      run: cp app/dist/index.html app/dist/404.html
+      run: cp dist/index.html dist/404.html
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.PAT }}
-        publish_dir: ./app/dist
+        publish_dir: ./dist
