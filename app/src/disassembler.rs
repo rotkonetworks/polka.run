@@ -195,7 +195,7 @@ fn MainMenu() -> impl IntoView {
 }
 
 // Main component
-//#[component]
+#[component]
 pub fn Disassembler() -> impl IntoView {
 
     let (unified_data, set_unified_data) = create_signal(Vec::new());
