@@ -448,34 +448,32 @@ fn Disassembler() -> impl IntoView {
                                 </div>
                             </Show>
                         </div>
+
                         <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
-                            <div class="text-sm p-4 flex flex-row">
-                                <div class="w-7/100 flex">
-                                    <div class="h-4">
-                                        <h3>Offset</h3>
-                                    </div>
-                                </div>
-                                <div class="w-23/100 flex">
-                                    <div class="h-4">
-                                        <h3>HEX</h3>
-                                    </div>
-                                </div>
-                                <div class="w-33/100">
-                                    <div class="h-4">
-                                        <h3>Assembly</h3>
-                                    </div>
-                                    <Show when=move || !unified_data().is_empty()>
-                                        <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
-                                            {move || disassembled_data().clone()}
-                                        </pre>
-                                    </Show>
-                                </div>
-                                <div class="w-33/100">
-                                    <div class="h-4">
-                                        <h3>Hint</h3>
-                                    </div>
-                                </div>
-                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Offset</th>
+                                        <th>Hex</th>
+                                        <th>Assembly</th>
+                                        <th>Hint</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <Show when=move || !unified_data().is_empty()>
+                                                <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
+                                                    {move || disassembled_data().clone()}
+                                                </pre>
+                                            </Show>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
