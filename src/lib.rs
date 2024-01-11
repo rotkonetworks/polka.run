@@ -297,7 +297,7 @@ fn MemoryView(memory: Vec<String>) -> impl IntoView {
                         .map(|line| {
                             view! {
                                 <div class="py-1 font-mono text-xs md:text-md xl:text-lg">
-                                    {line.clone()}
+                                    {line}
                                 </div>
                             }
                         })
