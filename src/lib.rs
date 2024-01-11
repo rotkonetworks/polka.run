@@ -451,28 +451,7 @@ fn Disassembler() -> impl IntoView {
 
                         <Show when=move || !unified_data().is_empty()>
                             <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Offset</th>
-                                            <th>Hex</th>
-                                            <th>Assembly</th>
-                                            <th>Hint</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td>
-                                                <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
-                                                    {move || disassembled_data().clone()}
-                                                </pre>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <InstructionTable data={disassembled_data()} />
                             </div>
                         </Show>
                     </div>
@@ -483,6 +462,34 @@ fn Disassembler() -> impl IntoView {
                 </div>
             </main>
         </div>
+    }
+}
+
+#[component]
+fn InstructionTable(data: String) -> impl IntoView {
+    view! {
+        <table>
+            <thead>
+                <tr>
+                    <th>Offset</th>
+                    <th>Hex</th>
+                    <th>Assembly</th>
+                    <th>Hint</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
+                            {data}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
     }
 }
 
