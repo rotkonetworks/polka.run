@@ -179,66 +179,7 @@ fn Home() -> impl IntoView {
 fn Disassembler() -> impl IntoView {
     let (unified_data, set_unified_data) = create_signal(Vec::new());
     let (chunk_size, set_chunk_size) = create_signal(0u8);
-    let (disassembled_data, set_disassembled_data) = create_signal(String::new());
-
-    fn unified_representation(data: &[u8], chunk_size: usize) -> Vec<String> {
-        data.chunks(chunk_size)
-            .enumerate()
-            .map(move |(index, chunk)| {
-                let current_offset = index * chunk_size; // Calculate offset here
-
-                // Initialize the strings with a capacity that avoids further allocation.
-                // 23 for hex_part: 2 chars per byte and 1 space, except after the last byte.
-                // 8 for text_part: 1 char per byte.
-                let mut hex_part = String::with_capacity(23);
-                let mut text_part = String::with_capacity(8);
-
-                for &byte in chunk {
-                    // Write the hex representation directly into hex_part.
-                    use std::fmt::Write;
-                    write!(hex_part, "{:02x} ", byte).expect("Writing to a String should never fail");
-                    // Append ASCII representation or '.' to text_part.
-                    text_part.push(if (32..=126).contains(&byte) { byte as char } else { '.' });
-                }
-
-                // Trim the trailing space from the hex_part and pad if necessary.
-                let hex_part = hex_part.trim_end().to_string();
-                let hex_part_padded = format!("{:23}", hex_part);
-
-                // Pad text_part if necessary.
-                let text_part_padded = format!("{:<8}", text_part);
-
-
-                // Format the output string with the current offset
-                let output = format!("{:06x} {} {}", current_offset, hex_part_padded, text_part_padded);
-                output
-            })
-            .collect()
-    }
-
-    fn disassemble_into(data: &[u8]) -> Result<String, &'static str> {
-        let blob = ProgramBlob::parse(data);
-        if blob.is_err() {
-            return Err("Failed to parse blob");
-        }
-        let blob = blob.unwrap();
-
-        let mut result = String::new();
-        for (nth_instruction, maybe_instruction) in blob.instructions().enumerate() {
-            match maybe_instruction {
-                Ok(instruction) => {
-                    result.push_str(&format!("{}: {}\n", nth_instruction, instruction));
-                }
-                Err(error) => {
-                    result.push_str(&format!(
-                        "ERROR: failed to parse raw instruction from blob. nth: {} Error: {}\n",
-                        nth_instruction, error
-                    ));
-                }
-            }
-        }
-        Ok(result)
-    }
+    let (instructions, set_instructions) = create_signal(vec![]);
 
     view! {
         <div class="h-full w-full flex flex-col">
@@ -247,13 +188,13 @@ fn Disassembler() -> impl IntoView {
                     <div class="w-full h-full p-4">
                         <div class="h-3/5 flex flex-row">
                             <Show when=move || unified_data().is_empty()>
-                                <FileUploadComponent on_file_uploaded=move |data_option| {
+                                <FileUploadComponent on_file_uploaded = move |data_option| {
+                                    // TODO: Handle error properly.
                                     if let Some(data) = data_option {
                                         set_chunk_size(16);
                                         set_unified_data(unified_representation(&data, chunk_size.get() as usize));
-                                        match disassemble_into(&data) {
-                                            Ok(disassembled) => set_disassembled_data(disassembled),
-                                            Err(error) => set_disassembled_data(error.to_string()),
+                                        if let Ok(instructions) = disassemble(&data) {
+                                            set_instructions(instructions)
                                         }
                                     }
                                 }/>
@@ -451,11 +392,12 @@ fn Disassembler() -> impl IntoView {
 
                         <Show when=move || !unified_data().is_empty()>
                             <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
-                                <InstructionTable data={disassembled_data()} />
+                                <InstructionTable instructions={instructions()} />
                             </div>
                         </Show>
                     </div>
                 </div>
+
                 <div class="offset-bar w-1/100 bg-gray-300 dark:bg-gray-800 p-2 overflow-auto">
                     <div class="w-full h-full bg-gray-400 dark:bg-gray-700 rounded-md"></div>
                     test
@@ -466,7 +408,7 @@ fn Disassembler() -> impl IntoView {
 }
 
 #[component]
-fn InstructionTable(data: String) -> impl IntoView {
+fn InstructionTable(instructions: Vec<String>) -> impl IntoView {
     view! {
         <table>
             <thead>
@@ -478,16 +420,21 @@ fn InstructionTable(data: String) -> impl IntoView {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
-                            {data}
-                        </pre>
-                    </td>
-                    <td></td>
-                </tr>
+                {move || {
+                    instructions
+                        .iter()
+                        .map(|ins| {
+                            view! {
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{ins}</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        })
+                        .collect::<Vec<_>>()
+                }}
             </tbody>
         </table>
     }
@@ -614,4 +561,70 @@ fn GithubSVG() -> impl IntoView {
             ></path>
         </svg>
     }
+}
+
+//------------------------------------------------------------------------------
+// DISASSEMBLY
+
+// TODO: Move these to a separate module.
+
+fn unified_representation(data: &[u8], chunk_size: usize) -> Vec<String> {
+    data.chunks(chunk_size)
+        .enumerate()
+        .map(move |(index, chunk)| {
+            let current_offset = index * chunk_size; // Calculate offset here
+
+            // Initialize the strings with a capacity that avoids further allocation.
+            // 23 for hex_part: 2 chars per byte and 1 space, except after the last byte.
+            // 8 for text_part: 1 char per byte.
+            let mut hex_part = String::with_capacity(23);
+            let mut text_part = String::with_capacity(8);
+
+            for &byte in chunk {
+                // Write the hex representation directly into hex_part.
+                use std::fmt::Write;
+                write!(hex_part, "{:02x} ", byte).expect("Writing to a String should never fail");
+                // Append ASCII representation or '.' to text_part.
+                text_part.push(if (32..=126).contains(&byte) { byte as char } else { '.' });
+            }
+
+            // Trim the trailing space from the hex_part and pad if necessary.
+            let hex_part = hex_part.trim_end().to_string();
+            let hex_part_padded = format!("{:23}", hex_part);
+
+            // Pad text_part if necessary.
+            let text_part_padded = format!("{:<8}", text_part);
+
+            // Format the output string with the current offset
+            let output = format!("{:06x} {} {}", current_offset, hex_part_padded, text_part_padded);
+            output
+        })
+        .collect()
+}
+
+
+fn disassemble(data: &[u8]) -> Result<Vec<String>, String> {
+    let blob = ProgramBlob::parse(data);
+    if blob.is_err() {
+        return Err("Failed to parse blob".into());
+    }
+
+    let blob = blob.unwrap();
+
+    let mut result = vec![];
+    for (i, maybe_instruction) in blob.instructions().enumerate() {
+        match maybe_instruction {
+            Ok(instruction) => {
+                result.push(instruction.to_string());
+            }
+            Err(error) => {
+                return Err(format!(
+                    "ERROR: failed to parse raw instruction from blob. nth: {} Error: {}\n",
+                    i, error
+                ));
+            }
+        }
+    }
+
+    Ok(result)
 }
