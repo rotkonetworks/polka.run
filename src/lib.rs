@@ -3,27 +3,9 @@ use leptos_meta::provide_meta_context;
 use leptos_router::{Route, Router, Routes};
 use wasm_bindgen::{closure::Closure, JsCast};
 use web_sys::{File, FileReader, HtmlInputElement, DragEvent, ProgressEvent};
-use serde::{Deserialize, Serialize};
 use std::rc::Rc;
 
 use polkavm::ProgramBlob;
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
-enum MenuItemType {
-    RegularItem,
-    SubMenu(Vec<MenuItem>),
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
-struct MenuItem {
-    label: String,
-    item_type: MenuItemType,
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
-struct MainMenu {
-    items: Vec<MenuItem>,
-}
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -260,28 +242,7 @@ fn Disassembler() -> impl IntoView {
 
     view! {
         <div class="h-full w-full flex flex-col">
-            <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
-                <div>
-                    <MainMenu/>
-                </div>
-            </header>
             <main class="flex flex-1 w-full h-full">
-                <aside class="w-9/100 bg-gray-200 dark:bg-gray-700 p-4 overflow-auto">
-                    <nav class="space-y-1">
-                        <a class="flex items-center space-x-2 text-sm" href="#" rel="ugc">
-                            <FileIcon/>
-                            <span class="overflow-auto">hello_world.polkavm</span>
-                        </a>
-                        <ul>
-                            <li>export</li>
-                            <li>remove</li>
-                        </ul>
-                        <a class="flex items-center space-x-2 text-sm" href="#" rel="ugc">
-                            <FileIcon/>
-                            <span>doom.polkavm</span>
-                        </a>
-                    </nav>
-                </aside>
                 <div class="flex flex-1 overflow-auto">
                     <div class="w-full h-full p-4">
                         <div class="h-3/5 flex flex-row">
@@ -488,30 +449,6 @@ fn Disassembler() -> impl IntoView {
                             </Show>
                         </div>
                         <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
-                            <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
-                                <div
-                                    role="menubar"
-                                    class="flex h-10 items-center space-x-1 rounded-md border bg-background p-1"
-                                    tabindex="0"
-                                    data-orientation="horizontal"
-                                    style="outline:none"
-                                >
-                                    <button
-                                        type="button"
-                                        role="menuitem"
-                                        id="radix-:R1mqrnnnlaH1:"
-                                        aria-haspopup="menu"
-                                        aria-expanded="false"
-                                        data-state="closed"
-                                        class="flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
-                                        tabindex="-1"
-                                        data-orientation="horizontal"
-                                        data-radix-collection-item=""
-                                    >
-                                        Disassembler
-                                    </button>
-                                </div>
-                            </header>
                             <div class="text-sm p-4 flex flex-row">
                                 <div class="w-7/100 flex">
                                     <div class="h-4">
@@ -547,158 +484,6 @@ fn Disassembler() -> impl IntoView {
                     test
                 </div>
             </main>
-        </div>
-    }
-}
-
-#[component]
-fn MainMenu() -> impl IntoView {
-    // fn load_menu() -> Result<MainMenu, ron::Error> {
-    //     let content = include_str!("pages/disassembler.ron");
-    //     println!("{}", content);
-    //     from_str(content).map_err(|e| e.into())
-    // }
-    //
-    // let menu = load_menu().expect("Failed to load menu");
-
-    let menu = MainMenu {
-        items: vec![
-            MenuItem {
-                label: "File".to_string(),
-                item_type: MenuItemType::SubMenu(vec![
-                    MenuItem {
-                        label: "Load New".to_string(),
-                        item_type: MenuItemType::RegularItem,
-                    },
-                    MenuItem {
-                        label: "Unload All".to_string(),
-                        item_type: MenuItemType::RegularItem,
-                    },
-                ]),
-            },
-            MenuItem {
-                label: "Settings".to_string(),
-                item_type: MenuItemType::RegularItem,
-            },
-            MenuItem {
-                label: "View".to_string(),
-                item_type: MenuItemType::SubMenu(vec![
-                    MenuItem {
-                        label: "Style".to_string(),
-                        item_type: MenuItemType::SubMenu(vec![
-                            MenuItem {
-                                label: "System Default".to_string(),
-                                item_type: MenuItemType::RegularItem,
-                            },
-                            MenuItem {
-                                label: "Day Mode".to_string(),
-                                item_type: MenuItemType::RegularItem,
-                            },
-                            MenuItem {
-                                label: "Dark Mode".to_string(),
-                                item_type: MenuItemType::RegularItem,
-                            },
-                        ]),
-                    },
-                    MenuItem {
-                        label: "Zoom".to_string(),
-                        item_type: MenuItemType::SubMenu(vec![
-                            MenuItem {
-                                label: "Zoom: {zoom_level}%".to_string(),
-                                item_type: MenuItemType::RegularItem,
-                            },
-                            MenuItem {
-                                label: "Zoom in (+)".to_string(),
-                                item_type: MenuItemType::RegularItem,
-                            },
-                            MenuItem {
-                                label: "Zoom out (-)".to_string(),
-                                item_type: MenuItemType::RegularItem,
-                            },
-                            MenuItem {
-                                label: "Default Size".to_string(),
-                                item_type: MenuItemType::RegularItem,
-                            },
-                        ]),
-                    },
-                ]),
-            },
-            MenuItem {
-                label: "Compare".to_string(),
-                item_type: MenuItemType::RegularItem,
-            },
-            MenuItem {
-                label: "Info".to_string(),
-                item_type: MenuItemType::RegularItem,
-            },
-        ],
-    };
-
-    view! {
-        <nav
-            role="menubar"
-            class="flex h-10 items-center space-x-1 rounded-md border bg-background p-1"
-            tabindex="0"
-            data-orientation="horizontal"
-            style="outline:none"
-        >
-            <For
-                each=move || menu.items.clone().into_iter()
-                key=|item| item.label.clone()
-                children=move |item| {
-                    view! { <MenuButton item=item.clone()/> }
-                }
-            />
-
-        </nav>
-    }
-}
-
-#[component]
-fn MenuButton(item: MenuItem) -> impl IntoView {
-    // let (toggle_submenu, set_toggle_submenu) = create_signal(false);
-
-    // let item_type = item.item_type.clone();
-    // let toggle_submenu_handler = move || {
-    //     match item_type {
-    //         MenuItemType::SubMenu(_) => {
-    //             set_toggle_submenu(!toggle_submenu.get());
-    //         }
-    //         _ => {}
-    //     }
-    // };
-
-    view! {
-        <div role="menuitem" class="menu-button">
-            // onclick=toggle_submenu_handler
-            {&item.label}
-        // <Show when=move || match &item.item_type {
-        // MenuItemType::SubMenu(_) => true,
-        // _ => false,
-        // }>
-        //
-        // <div
-        // role="menu"
-        // class="menu"
-        // tabindex="-1"
-        // aria-orientation="vertical"
-        // aria-labelledby="radix-:R1mqrnnnlaH1:"
-        // style="outline:none"
-        // >
-        // <ul>
-        // <For
-        // each=move || match &item.item_type {
-        // MenuItemType::SubMenu(items) => items.clone().into_iter(),
-        // _ => vec![].into_iter(),
-        // }
-        // key=|item| item.label.clone()
-        // children=move |item| {
-        // view! { <li><MenuButton item=item.clone() /></li> }
-        // }
-        // />
-        // </ul>
-        // </div>
-        // </Show>
         </div>
     }
 }
