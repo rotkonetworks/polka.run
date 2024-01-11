@@ -179,7 +179,7 @@ fn Home() -> impl IntoView {
 fn Disassembler() -> impl IntoView {
     let (unified_data, set_unified_data) = create_signal(Vec::new());
     let (chunk_size, set_chunk_size) = create_signal(0u8);
-    let (instructions, set_instructions) = create_signal(vec![]);
+    let (code, set_code) = create_signal(vec![]);
 
     view! {
         <div class="h-full w-full flex flex-col">
@@ -193,8 +193,8 @@ fn Disassembler() -> impl IntoView {
                                     if let Some(data) = data_option {
                                         set_chunk_size(16);
                                         set_unified_data(bin::unified_representation(&data, chunk_size.get() as usize));
-                                        if let Ok(instructions) = bin::disassemble(&data) {
-                                            set_instructions(instructions)
+                                        if let Ok(code) = bin::disassemble(&data) {
+                                            set_code(code)
                                         }
                                     }
                                 }/>
@@ -392,7 +392,7 @@ fn Disassembler() -> impl IntoView {
 
                         <Show when=move || !unified_data().is_empty()>
                             <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
-                                <InstructionTable instructions={instructions()} />
+                                <CodeView code={code()} />
                             </div>
                         </Show>
                     </div>
@@ -408,7 +408,7 @@ fn Disassembler() -> impl IntoView {
 }
 
 #[component]
-fn InstructionTable(instructions: Vec<String>) -> impl IntoView {
+fn CodeView(code: Vec<String>) -> impl IntoView {
     view! {
         <table>
             <thead>
@@ -420,7 +420,7 @@ fn InstructionTable(instructions: Vec<String>) -> impl IntoView {
             </thead>
             <tbody>
                 {move || {
-                    instructions
+                    code
                         .iter()
                         .map(|ins| {
                             view! {
