@@ -449,32 +449,32 @@ fn Disassembler() -> impl IntoView {
                             </Show>
                         </div>
 
-                        <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Offset</th>
-                                        <th>Hex</th>
-                                        <th>Assembly</th>
-                                        <th>Hint</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <Show when=move || !unified_data().is_empty()>
+                        <Show when=move || !unified_data().is_empty()>
+                            <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Offset</th>
+                                            <th>Hex</th>
+                                            <th>Assembly</th>
+                                            <th>Hint</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
                                                 <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
                                                     {move || disassembled_data().clone()}
                                                 </pre>
-                                            </Show>
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </Show>
                     </div>
                 </div>
                 <div class="offset-bar w-1/100 bg-gray-300 dark:bg-gray-800 p-2 overflow-auto">
