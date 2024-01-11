@@ -416,7 +416,6 @@ fn InstructionTable(instructions: Vec<String>) -> impl IntoView {
                     <th>Offset</th>
                     <th>Hex</th>
                     <th>Assembly</th>
-                    <th>Hint</th>
                 </tr>
             </thead>
             <tbody>
@@ -429,7 +428,6 @@ fn InstructionTable(instructions: Vec<String>) -> impl IntoView {
                                     <td></td>
                                     <td></td>
                                     <td>{ins}</td>
-                                    <td></td>
                                 </tr>
                             }
                         })
