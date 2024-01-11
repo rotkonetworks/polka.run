@@ -1,6 +1,34 @@
 use polkavm::ProgramBlob;
 
-pub(crate) fn unified_representation(data: &[u8], chunk_size: usize) -> Vec<String> {
+const CHUNK_SIZE: usize = 16;
+
+//------------------------------------------------------------------------------
+
+pub type LoadError = String;
+
+#[derive(Clone, Debug)]
+pub struct Binary {
+    // TODO: Use proper types rather than strings.
+    pub memory: Vec<String>,
+    pub code: Vec<String>,
+}
+
+impl Binary {
+    pub fn new(memory: Vec<String>, code: Vec<String>) -> Self {
+        Self { memory, code }
+    }
+}
+
+//------------------------------------------------------------------------------
+
+pub fn load(data: &[u8]) -> Result<Binary, LoadError> {
+    disassemble(&data).and_then(|code| {
+        let memory = parse_data(&data, CHUNK_SIZE);
+        Ok(Binary::new(memory, code))
+    })
+}
+
+fn parse_data(data: &[u8], chunk_size: usize) -> Vec<String> {
     data.chunks(chunk_size)
         .enumerate()
         .map(move |(index, chunk)| {
@@ -34,7 +62,7 @@ pub(crate) fn unified_representation(data: &[u8], chunk_size: usize) -> Vec<Stri
         .collect()
 }
 
-pub(crate) fn disassemble(data: &[u8]) -> Result<Vec<String>, String> {
+fn disassemble(data: &[u8]) -> Result<Vec<String>, LoadError> {
     let blob = ProgramBlob::parse(data);
     if blob.is_err() {
         return Err("Failed to parse blob".into());
