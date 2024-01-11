@@ -7,6 +7,8 @@ use wasm_bindgen::{closure::Closure, JsCast};
 use web_sys::{File, FileReader, HtmlInputElement, DragEvent, ProgressEvent};
 use std::rc::Rc;
 
+const CHUNK_SIZE: usize = 16;
+
 #[component]
 pub fn App() -> impl IntoView {
     provide_meta_context();
@@ -178,7 +180,6 @@ fn Home() -> impl IntoView {
 #[component]
 fn Disassembler() -> impl IntoView {
     let (unified_data, set_unified_data) = create_signal(Vec::new());
-    let (chunk_size, set_chunk_size) = create_signal(0u8);
     let (code, set_code) = create_signal(vec![]);
 
     view! {
@@ -191,8 +192,7 @@ fn Disassembler() -> impl IntoView {
                                 <FileUploadComponent on_file_uploaded = move |data_option| {
                                     // TODO: Handle error properly.
                                     if let Some(data) = data_option {
-                                        set_chunk_size(16);
-                                        set_unified_data(bin::unified_representation(&data, chunk_size.get() as usize));
+                                        set_unified_data(bin::unified_representation(&data, CHUNK_SIZE));
                                         if let Ok(code) = bin::disassemble(&data) {
                                             set_code(code)
                                         }
