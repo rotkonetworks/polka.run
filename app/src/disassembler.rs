@@ -36,7 +36,10 @@ fn MenuButton(item: MenuItem) -> impl IntoView {
     // };
 
     view! {
-        <div role="menuitem" class="menu-button px-4 py-2 text-md font-semibold text-gray-700 bg-white hover:bg-gray-100 focus:bg-gray-200 rounded-xs border border-gray-300 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+        <div
+            role="menuitem"
+            class="menu-button px-4 py-2 text-md font-semibold text-gray-700 bg-white hover:bg-gray-100 focus:bg-gray-200 rounded-xs border border-gray-300 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+        >
             // onclick=toggle_submenu_handler
             {&item.label}
         // <Show when=move || match &item.item_type {
@@ -255,23 +258,31 @@ pub fn Disassembler() -> impl IntoView {
                 <Show when=move || !unified_data().is_empty()>
                     <aside class="hidden md:block md:w-14/100 lg:w-12/100 bg-gray-200 dark:bg-gray-700 p-2 lg:p-4 overflow-auto">
                         <nav class="p-2 lg:p-4 bg-gray-100 w-full max-w-sm shadow-md">
-                            <a class="flex items-center gap-2 text-sm hover:bg-gray-200 p-1 lg:p-2 rounded"
-                            href="#"
-                            rel="ugc"
-                            on:click=move |_| {
-                                set_show_file_options(!show_file_options.get()); 
-                            }>
+                            <a
+                                class="flex items-center gap-2 text-sm hover:bg-gray-200 p-1 lg:p-2 rounded"
+                                href="#"
+                                rel="ugc"
+                                on:click=move |_| {
+                                    set_show_file_options(!show_file_options.get());
+                                }
+                            >
+
                                 <span class="truncate">{filename}</span>
                             </a>
                             <Show when=move || show_file_options.get()>
                                 <ul class="list-none p-0 m-0 text-xs">
-                                    <li class="cursor-pointer hover:bg-gray-300 p-1 lg:p-2 rounded overflow-auto"
-                                    on:click=move |_| {
-                                        set_unified_data(Vec::new());
-                                        set_chunk_size(0);
-                                        set_filename(String::new());
-                                        set_disassembled_data(String::new());
-                                    }>remove</li>
+                                    <li
+                                        class="cursor-pointer hover:bg-gray-300 p-1 lg:p-2 rounded overflow-auto"
+                                        on:click=move |_| {
+                                            set_unified_data(Vec::new());
+                                            set_chunk_size(0);
+                                            set_filename(String::new());
+                                            set_disassembled_data(String::new());
+                                        }
+                                    >
+
+                                        remove
+                                    </li>
                                 </ul>
                             </Show>
                         </nav>
@@ -282,18 +293,23 @@ pub fn Disassembler() -> impl IntoView {
                         <div class="h-55/100 flex flex-row p-4">
                             <Show when=move || unified_data().is_empty()>
                                 <div class="border-dashed border-4 w-full h-full p-4">
-                                    <FileUploadComponent on_file_uploaded=move |data_option, filename| {
+                                    <FileUploadComponent on_file_uploaded=move |
+                                        data_option,
+                                        filename|
+                                    {
                                         if let Some(data) = data_option {
                                             set_filename(filename);
                                             set_chunk_size(16);
-                                            set_unified_data(unified_representation(&data, chunk_size.get() as usize));
+                                            set_unified_data(
+                                                unified_representation(&data, chunk_size.get() as usize),
+                                            );
                                             match disassemble_into(&data) {
                                                 Ok(disassembled) => set_disassembled_data(disassembled),
                                                 Err(error) => set_disassembled_data(error.to_string()),
                                             }
                                         }
                                     }/>
-                                    </div>
+                                </div>
                             </Show>
                             <Show when=move || !unified_data().is_empty()>
                                 <pre class="border w-full border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
@@ -309,6 +325,7 @@ pub fn Disassembler() -> impl IntoView {
                                             })
                                             .collect::<Vec<_>>()
                                     }}
+
                                 </pre>
                             </Show>
                         </div>
@@ -366,9 +383,6 @@ pub fn Disassembler() -> impl IntoView {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="offset-bar w-3/100 bg-gray-300 dark:bg-gray-800 p-2 overflow-auto">
-                    <div class="w-full h-full bg-gray-400 dark:bg-gray-700 rounded-md"></div>
                 </div>
             </main>
         </div>

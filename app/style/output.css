@@ -34,7 +34,6 @@
 .h-full{height:100%;}
 .h-screen{height:100vh;}
 .max-w-sm{max-width:24rem;}
-.w-3\/100{width:3%;}
 .w-full{width:100%;}
 .w-screen{width:100vw;}
 .flex{display:flex;}
@@ -69,8 +68,6 @@
 .bg-\#552BBF{--un-bg-opacity:1;background-color:rgba(85,43,191,var(--un-bg-opacity));}
 .bg-gray-100{--un-bg-opacity:1;background-color:rgba(243,244,246,var(--un-bg-opacity));}
 .bg-gray-200{--un-bg-opacity:1;background-color:rgba(229,231,235,var(--un-bg-opacity));}
-.bg-gray-300{--un-bg-opacity:1;background-color:rgba(209,213,219,var(--un-bg-opacity));}
-.bg-gray-400{--un-bg-opacity:1;background-color:rgba(156,163,175,var(--un-bg-opacity));}
 .bg-white{--un-bg-opacity:1;background-color:rgba(255,255,255,var(--un-bg-opacity));}
 .dark .dark\:bg-gray-700{--un-bg-opacity:1;background-color:rgba(55,65,81,var(--un-bg-opacity));}
 .dark .dark\:bg-gray-800{--un-bg-opacity:1;background-color:rgba(31,41,55,var(--un-bg-opacity));}
