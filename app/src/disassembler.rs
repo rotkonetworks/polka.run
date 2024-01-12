@@ -22,26 +22,6 @@ struct MainMenu {
 }
 
 #[component]
-fn FileIcon() -> impl IntoView {
-    view! {
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewbox="0 0 24 24"
-        fill="none"
-        stroke="currentcolor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="w-5 h-5"
-    >
-        <path d="m4 20h16a2 2 0 0 0 2-2v8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2a2 2 0 0 0 7.93 3h4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2z"></path>
-    </svg>
-    }
-}
-
-#[component]
 fn MenuButton(item: MenuItem) -> impl IntoView {
     // let (toggle_submenu, set_toggle_submenu) = create_signal(false);
 
@@ -56,7 +36,7 @@ fn MenuButton(item: MenuItem) -> impl IntoView {
     // };
 
     view! {
-        <div role="menuitem" class="menu-button">
+        <div role="menuitem" class="menu-button px-4 py-2 text-md font-semibold text-gray-700 bg-white hover:bg-gray-100 focus:bg-gray-200 rounded-xs border border-gray-300 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
             // onclick=toggle_submenu_handler
             {&item.label}
         // <Show when=move || match &item.item_type {
@@ -177,7 +157,7 @@ fn MainMenu() -> impl IntoView {
     view! {
         <nav
             role="menubar"
-            class="flex h-10 items-center space-x-1 rounded-md border bg-background p-1"
+            class="flex h-10 items-center space-x-1 rounded-md border-0 bg-background p-1"
             tabindex="0"
             data-orientation="horizontal"
             style="outline:none"
@@ -273,9 +253,9 @@ pub fn Disassembler() -> impl IntoView {
             </header>
             <main class="flex flex-1 w-full h-full">
                 <Show when=move || !unified_data().is_empty()>
-                    <aside class="hidden md:block md:w-14/100 lg:w-12/100 bg-gray-200 dark:bg-gray-700 p-4 overflow-auto">
-                        <nav class="p-4 bg-gray-100 w-full max-w-sm shadow-md">
-                            <a class="flex items-center gap-2 text-sm hover:bg-gray-200 p-2 rounded"
+                    <aside class="hidden md:block md:w-14/100 lg:w-12/100 bg-gray-200 dark:bg-gray-700 p-2 lg:p-4 overflow-auto">
+                        <nav class="p-2 lg:p-4 bg-gray-100 w-full max-w-sm shadow-md">
+                            <a class="flex items-center gap-2 text-sm hover:bg-gray-200 p-1 lg:p-2 rounded"
                             href="#"
                             rel="ugc"
                             on:click=move |_| {
@@ -285,7 +265,7 @@ pub fn Disassembler() -> impl IntoView {
                             </a>
                             <Show when=move || show_file_options.get()>
                                 <ul class="list-none p-0 m-0 text-xs">
-                                    <li class="cursor-pointer hover:bg-gray-300 p-2 rounded overflow-auto"
+                                    <li class="cursor-pointer hover:bg-gray-300 p-1 lg:p-2 rounded overflow-auto"
                                     on:click=move |_| {
                                         set_unified_data(Vec::new());
                                         set_chunk_size(0);
@@ -298,24 +278,25 @@ pub fn Disassembler() -> impl IntoView {
                     </aside>
                 </Show>
                 <div class="flex flex-1 overflow-auto">
-                    <div class="w-full h-full p-4">
-                        <div class="h-3/5 flex flex-row">
+                    <div class="w-full h-full">
+                        <div class="h-55/100 flex flex-row p-4">
                             <Show when=move || unified_data().is_empty()>
-                                <FileUploadComponent on_file_uploaded=move |data_option, filename| {
-                                    if let Some(data) = data_option {
-                                        set_filename(filename);
-                                        set_chunk_size(16);
-                                        set_unified_data(unified_representation(&data, chunk_size.get() as usize));
-                                        match disassemble_into(&data) {
-                                            Ok(disassembled) => set_disassembled_data(disassembled),
-                                            Err(error) => set_disassembled_data(error.to_string()),
+                                <div class="border-dashed border-4 w-full h-full p-4">
+                                    <FileUploadComponent on_file_uploaded=move |data_option, filename| {
+                                        if let Some(data) = data_option {
+                                            set_filename(filename);
+                                            set_chunk_size(16);
+                                            set_unified_data(unified_representation(&data, chunk_size.get() as usize));
+                                            match disassemble_into(&data) {
+                                                Ok(disassembled) => set_disassembled_data(disassembled),
+                                                Err(error) => set_disassembled_data(error.to_string()),
+                                            }
                                         }
-                                    }
-                                }/>
+                                    }/>
+                                    </div>
                             </Show>
                             <Show when=move || !unified_data().is_empty()>
                                 <pre class="border w-full border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
-
                                     {move || {
                                         unified_data()
                                             .iter()
@@ -328,182 +309,10 @@ pub fn Disassembler() -> impl IntoView {
                                             })
                                             .collect::<Vec<_>>()
                                     }}
-
                                 </pre>
-                            //     <div class="md:w-54/100">
-                            //         <div class="overflow-x-auto m-4">
-                            //             <table class="w-full border-collapse table-fixed">
-                            //                 <thead>
-                            //                     <tr>
-                            //                         <th class="sticky top-0 bg-gray-300 border p-2 text-left w-1/10">
-                            //                             Offset
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             00
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             01
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             02
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             03
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             04
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             05
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             06
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             07
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             08
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             09
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0A
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0B
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0C
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0D
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             "0E"
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0F
-                            //                         </th>
-                            //                     </tr>
-                            //                 </thead>
-                            //                 <tbody>
-                            //                     <tr>
-                            //                         <td class="border p-2 bg-gray-200">000000</td>
-                            //                         <td class="border p-2">41</td>
-                            //                         <td class="border p-2">42</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                         <td class="border p-2">41</td>
-                            //                         <td class="border p-2">42</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                         <td class="border p-2">41</td>
-                            //                         <td class="border p-2">42</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                         <td class="border p-2">41</td>
-                            //                         <td class="border p-2">42</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                         <td class="border p-2">41</td>
-                            //                         <td class="border p-2">42</td>
-                            //                         <td class="border p-2">4F</td>
-                            //                     </tr>
-                            //                     <tr>
-                            //                         <td class="border p-2 bg-gray-200">000010</td>
-                            //                         <td class="border p-2">11</td>
-                            //                         <td class="border p-2">F2</td>
-                            //                         <td class="border p-2">FF</td>
-                            //                     </tr>
-                            //                 </tbody>
-                            //             </table>
-                            //         </div>
-                            //     </div>
-                            //     <div class="w-46/100">
-                            //         <div class="overflow-x-auto m-4">
-                            //             <table class="w-full border-collapse table-fixed">
-                            //                 <thead>
-                            //                     <tr>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             00
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             01
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             02
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             03
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             04
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             05
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             06
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             07
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             08
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             09
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0A
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0B
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0C
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0D
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             "0E"
-                            //                         </th>
-                            //                         <th class="sticky top-0 bg-gray-200 border p-2 text-left">
-                            //                             0F
-                            //                         </th>
-                            //                     </tr>
-                            //                 </thead>
-                            //                 <tbody>
-                            //                     <tr>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">F</td>
-                            //                         <td class="border p-2">U</td>
-                            //                         <td class="border p-2">N</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">c</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">.</td>
-                            //                         <td class="border p-2">v</td>
-                            //                         <td class="border p-2">i</td>
-                            //                         <td class="border p-2">i</td>
-                            //                         <td class="border p-2">.</td>
-                            //                     </tr>
-                            //                     <tr>
-                            //                         <td class="border p-2">11</td>
-                            //                         <td class="border p-2">F2</td>
-                            //                         <td class="border p-2">FF</td>
-                            //                     </tr>
-                            //                 </tbody>
-                            //             </table>
-                            //         </div>
-                            //     </div>
                             </Show>
                         </div>
-                        <div class="w-full h-2/5 mt-4 border-t border-gray-200 dark:border-gray-800">
+                        <div class="w-full h-40/100 mt-4 border-t border-gray-200 dark:border-gray-800">
                             <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
                                 <div
                                     role="menubar"
@@ -529,17 +338,17 @@ pub fn Disassembler() -> impl IntoView {
                                 </div>
                             </header>
                             <div class="text-sm p-4 flex flex-row">
-                                <div class="w-7/100 flex">
+                                <div class="hidden md:block md:w-10/100 flex">
                                     <div class="h-4">
                                         <h3>Offset</h3>
                                     </div>
                                 </div>
-                                <div class="w-23/100 flex">
+                                <div class="hidden md:block md:w-23/100 flex">
                                     <div class="h-4">
                                         <h3>HEX</h3>
                                     </div>
                                 </div>
-                                <div class="w-33/100">
+                                <div class="w-full md:w-33/100">
                                     <div class="h-4">
                                         <h3>Assembly</h3>
                                     </div>
@@ -549,7 +358,7 @@ pub fn Disassembler() -> impl IntoView {
                                         </pre>
                                     </Show>
                                 </div>
-                                <div class="w-33/100">
+                                <div class="hidden md:block md:w-33/100">
                                     <div class="h-4">
                                         <h3>Hint</h3>
                                     </div>
@@ -558,9 +367,8 @@ pub fn Disassembler() -> impl IntoView {
                         </div>
                     </div>
                 </div>
-                <div class="offset-bar w-1/100 bg-gray-300 dark:bg-gray-800 p-2 overflow-auto">
+                <div class="offset-bar w-3/100 bg-gray-300 dark:bg-gray-800 p-2 overflow-auto">
                     <div class="w-full h-full bg-gray-400 dark:bg-gray-700 rounded-md"></div>
-                    test
                 </div>
             </main>
         </div>

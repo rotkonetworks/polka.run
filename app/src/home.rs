@@ -4,10 +4,10 @@ use leptos::*;
 pub fn Home() -> impl IntoView {
     view! {
         <div class="container p-8 mx-auto">
-            <h1 class="text-3xl font-bold text-center md:text-4xl lg:text-5xl">"polka.run"</h1>
-            <div class="flex flex-col md:flex-row gap-6 mt-6">
-                <div class="lg:w-1/2 p-4">
-                    <h1 class="text-3xl font-bold">
+            <h1 class="text-2xl font-bold text-center md:text-4xl lg:text-5xl">"polka.run"</h1>
+            <div class="flex flex-col lg:flex-row gap-6 mt-6">
+                <div class="w-full lg:w-1/4 p-4">
+                    <h1 class="text-xl font-bold">
                         "PolkaVM: Stepping up the Blockchain Virtual Machines"
                     </h1>
                     <p class="text-md leading-relaxed mt-4">
@@ -30,7 +30,7 @@ pub fn Home() -> impl IntoView {
                         </li>
                     </ul>
                 </div>
-                <div class="lg:w-1/2 p-4">
+                <div class="w-full lg:w-1/4 p-4">
                     <h2 class="text-xl font-semibold">"PolkaVM's Advantages"</h2>
                     <ul class="list-disc pl-5 mt-2">
                         <li>
@@ -69,7 +69,7 @@ pub fn Home() -> impl IntoView {
                         </li>
                     </ul>
                 </div>
-                <div class="lg:w-1/2">
+                <div class="w-full lg:w-1/2">
                     <pre class="text-xs xl:text-sm">
 "╔══════════════════════════════════════════════════════════════════════════════╗
 ║...:OdKK;  ;OK;..OcXXXd0XxdkdOXNX0oX0lNdNWNWWx0WkWo0OdWXkWdK ; kNMX0d0XMMx;XMk║
