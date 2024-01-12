@@ -200,6 +200,9 @@ pub fn Disassembler() -> impl IntoView {
 
     let (unified_data, set_unified_data) = create_signal(Vec::new());
     let (chunk_size, set_chunk_size) = create_signal(0u8);
+    let (filename, set_filename) = create_signal(String::new());
+    let (show_file_options, set_show_file_options)  = create_signal(false);
+
     let (disassembled_data, set_disassembled_data) = create_signal(String::new());
 
 
@@ -269,28 +272,38 @@ pub fn Disassembler() -> impl IntoView {
                 </div>
             </header>
             <main class="flex flex-1 w-full h-full">
-                <aside class="w-9/100 bg-gray-200 dark:bg-gray-700 p-4 overflow-auto">
-                    <nav class="space-y-1">
-                        <a class="flex items-center space-x-2 text-sm" href="#" rel="ugc">
-                            <FileIcon/>
-                            <span class="overflow-auto">hello_world.polkavm</span>
-                        </a>
-                        <ul>
-                            <li>export</li>
-                            <li>remove</li>
-                        </ul>
-                        <a class="flex items-center space-x-2 text-sm" href="#" rel="ugc">
-                            <FileIcon/>
-                            <span>doom.polkavm</span>
-                        </a>
-                    </nav>
-                </aside>
+                <Show when=move || !unified_data().is_empty()>
+                    <aside class="hidden md:block md:w-14/100 lg:w-12/100 bg-gray-200 dark:bg-gray-700 p-4 overflow-auto">
+                        <nav class="p-4 bg-gray-100 w-full max-w-sm shadow-md">
+                            <a class="flex items-center gap-2 text-sm hover:bg-gray-200 p-2 rounded"
+                            href="#"
+                            rel="ugc"
+                            on:click=move |_| {
+                                set_show_file_options(!show_file_options.get()); 
+                            }>
+                                <span class="truncate">{filename}</span>
+                            </a>
+                            <Show when=move || show_file_options.get()>
+                                <ul class="list-none p-0 m-0 text-xs">
+                                    <li class="cursor-pointer hover:bg-gray-300 p-2 rounded overflow-auto"
+                                    on:click=move |_| {
+                                        set_unified_data(Vec::new());
+                                        set_chunk_size(0);
+                                        set_filename(String::new());
+                                        set_disassembled_data(String::new());
+                                    }>remove</li>
+                                </ul>
+                            </Show>
+                        </nav>
+                    </aside>
+                </Show>
                 <div class="flex flex-1 overflow-auto">
                     <div class="w-full h-full p-4">
                         <div class="h-3/5 flex flex-row">
                             <Show when=move || unified_data().is_empty()>
-                                <FileUploadComponent on_file_uploaded=move |data_option| {
+                                <FileUploadComponent on_file_uploaded=move |data_option, filename| {
                                     if let Some(data) = data_option {
+                                        set_filename(filename);
                                         set_chunk_size(16);
                                         set_unified_data(unified_representation(&data, chunk_size.get() as usize));
                                         match disassemble_into(&data) {

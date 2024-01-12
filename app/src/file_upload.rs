@@ -4,10 +4,11 @@ use wasm_bindgen::{closure::Closure, JsCast};
 use web_sys::{File, FileReader, HtmlInputElement, DragEvent, ProgressEvent};
 
 #[component]
-pub fn FileUploadComponent<F: Fn(Option<Vec<u8>>) + 'static>(on_file_uploaded: F) -> impl IntoView {
+pub fn FileUploadComponent<F: Fn(Option<Vec<u8>>, String) + 'static>(on_file_uploaded: F) -> impl IntoView {
     let on_file_uploaded = Rc::new(on_file_uploaded);
 
     let process_file = |on_file_uploaded: Rc<F>, file: File| {
+        let filename = file.name();
         let reader = FileReader::new().unwrap();
         let reader_c = reader.clone();
 
@@ -20,7 +21,7 @@ pub fn FileUploadComponent<F: Fn(Option<Vec<u8>>) + 'static>(on_file_uploaded: F
                 .unwrap();
             let array = js_sys::Uint8Array::new(&array_buffer);
             let vec = array.to_vec();
-            on_file_uploaded_cloned(Some(vec));
+            on_file_uploaded_cloned(Some(vec), filename.clone());
         }) as Box<dyn FnMut(ProgressEvent)>);
 
         reader.set_onload(Some(onload.as_ref().unchecked_ref()));
