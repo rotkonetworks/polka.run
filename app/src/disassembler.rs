@@ -204,36 +204,35 @@ pub fn Disassembler() -> impl IntoView {
 
 
     fn unified_representation(data: &[u8], chunk_size: usize) -> Vec<String> {
+        let hex_length = chunk_size * 3 - 1; // Expected length of the hex part
+
         data.chunks(chunk_size)
             .enumerate()
             .map(move |(index, chunk)| {
                 let current_offset = index * chunk_size; // Calculate offset here
 
-                // Initialize the strings with a capacity that avoids further allocation.
-                // 23 for hex_part: 2 chars per byte and 1 space, except after the last byte.
-                // 8 for text_part: 1 char per byte.
-                let mut hex_part = String::with_capacity(23);
-                let mut text_part = String::with_capacity(8);
+                // Initialize hex_part and text_part
+                let mut hex_part = String::with_capacity(hex_length);
+                let mut text_part = String::with_capacity(chunk_size);
 
                 for &byte in chunk {
-                    // Write the hex representation directly into hex_part.
-                    use std::fmt::Write;
-                    write!(hex_part, "{:02x} ", byte).expect("Writing to a String should never fail");
-                    // Append ASCII representation or '.' to text_part.
+                    // Append to hex_part and text_part
+                    hex_part.push_str(&format!("{:02x} ", byte));
                     text_part.push(if (32..=126).contains(&byte) { byte as char } else { '.' });
                 }
 
-                // Trim the trailing space from the hex_part and pad if necessary.
-                let hex_part = hex_part.trim_end().to_string();
-                let hex_part_padded = format!("{:23}", hex_part);
+                // Pad the hex_part and text_part if necessary
+                while hex_part.len() < hex_length {
+                    hex_part.push_str("..");
+                    text_part.push(' ');
+                }
 
-                // Pad text_part if necessary.
-                let text_part_padded = format!("{:<8}", text_part);
-
+                // Ensure hex_part and text_part are of consistent length
+                let hex_part_padded = format!("{:width$}", hex_part, width = hex_length);
+                let text_part_padded = format!("{:<width$}", text_part, width = chunk_size);
 
                 // Format the output string with the current offset
-                let output = format!("{:06x} {} {}", current_offset, hex_part_padded, text_part_padded);
-                output
+                format!("{:06x} {} {}", current_offset, hex_part_padded, text_part_padded)
             })
             .collect()
     }
