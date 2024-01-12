@@ -11,7 +11,7 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     view! {
-        <body class="h-screen w-screen">
+        <body class="flex flex-col min-w-screen min-h-screen">
             <Navigation/>
             <Router>
                 <Routes>

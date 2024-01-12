@@ -248,18 +248,18 @@ pub fn Disassembler() -> impl IntoView {
     }
 
     view! {
-        <div class="h-full w-full flex flex-col">
-            <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
+        <div class="flex flex-col h-min-screen">
+            <div class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
                 <div>
                     <MainMenu/>
                 </div>
-            </header>
-            <main class="flex flex-1 w-full h-full">
+            </div>
+            <div class="flex flex-1 overflow-auto">
                 <Show when=move || !unified_data().is_empty()>
-                    <aside class="hidden md:block md:w-14/100 lg:w-12/100 bg-gray-200 dark:bg-gray-700 p-2 lg:p-4 overflow-auto">
-                        <nav class="p-2 lg:p-4 bg-gray-100 w-full max-w-sm shadow-md">
+                    <aside class="w-32 md:w-40 lg:w-48 xl:w-64 bg-gray-200 dark:bg-gray-700 p-2 lg:p-4 overflow-auto">
+                        <nav class="p-2 lg:p-4 bg-gray-100 w-full shadow-md">
                             <a
-                                class="flex items-center gap-2 text-sm hover:bg-gray-200 p-1 lg:p-2 rounded"
+                                class="flex items-center text-sm hover:bg-gray-200 p-1"
                                 href="#"
                                 rel="ugc"
                                 on:click=move |_| {
@@ -267,12 +267,12 @@ pub fn Disassembler() -> impl IntoView {
                                 }
                             >
 
-                                <span class="truncate">{filename}</span>
+                                <div class="i-mdi-file" /><span class="truncate">{filename}</span>
                             </a>
                             <Show when=move || show_file_options.get()>
                                 <ul class="list-none p-0 m-0 text-xs">
                                     <li
-                                        class="cursor-pointer hover:bg-gray-300 p-1 lg:p-2 rounded overflow-auto"
+                                        class="cursor-pointer hover:bg-gray-300 p-2 rounded overflow-auto"
                                         on:click=move |_| {
                                             set_unified_data(Vec::new());
                                             set_chunk_size(0);
@@ -281,7 +281,7 @@ pub fn Disassembler() -> impl IntoView {
                                         }
                                     >
 
-                                        remove
+                                        <div class="i-mdi-remove" />remove
                                     </li>
                                 </ul>
                             </Show>
@@ -290,7 +290,7 @@ pub fn Disassembler() -> impl IntoView {
                 </Show>
                 <div class="flex flex-1 overflow-auto">
                     <div class="w-full h-full">
-                        <div class="h-55/100 flex flex-row p-4">
+                        <div class="h-50vh flex flex-row p-4">
                             <Show when=move || unified_data().is_empty()>
                                 <div class="border-dashed border-4 w-full h-full p-4">
                                     <FileUploadComponent on_file_uploaded=move |
@@ -312,7 +312,7 @@ pub fn Disassembler() -> impl IntoView {
                                 </div>
                             </Show>
                             <Show when=move || !unified_data().is_empty()>
-                                <pre class="border w-full border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
+                                <pre class="border w-full h-full border-gray-200 rounded p-2 bg-gray-100 overflow-x-scroll">
                                     {move || {
                                         unified_data()
                                             .iter()
@@ -329,31 +329,31 @@ pub fn Disassembler() -> impl IntoView {
                                 </pre>
                             </Show>
                         </div>
-                        <div class="w-full h-40/100 mt-4 border-t border-gray-200 dark:border-gray-800">
-                            <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
-                                <div
-                                    role="menubar"
-                                    class="flex h-10 items-center space-x-1 rounded-md border bg-background p-1"
-                                    tabindex="0"
+                        <header class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
+                            <div
+                                role="menubar"
+                                class="flex h-10 items-center space-x-1 rounded-md border bg-background p-1"
+                                tabindex="0"
+                                data-orientation="horizontal"
+                                style="outline:none"
+                            >
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    id="radix-:R1mqrnnnlaH1:"
+                                    aria-haspopup="menu"
+                                    aria-expanded="false"
+                                    data-state="closed"
+                                    class="flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
+                                    tabindex="-1"
                                     data-orientation="horizontal"
-                                    style="outline:none"
+                                    data-radix-collection-item=""
                                 >
-                                    <button
-                                        type="button"
-                                        role="menuitem"
-                                        id="radix-:R1mqrnnnlaH1:"
-                                        aria-haspopup="menu"
-                                        aria-expanded="false"
-                                        data-state="closed"
-                                        class="flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
-                                        tabindex="-1"
-                                        data-orientation="horizontal"
-                                        data-radix-collection-item=""
-                                    >
-                                        Disassembler
-                                    </button>
-                                </div>
-                            </header>
+                                    Disassembler
+                                </button>
+                            </div>
+                        </header>
+                        <div class="w-full h-35vh mt-4 border-t border-gray-200 dark:border-gray-800 overflow-x-auto">
                             <div class="text-sm p-4 flex flex-row">
                                 <div class="hidden md:block md:w-10/100 flex">
                                     <div class="h-4">
@@ -384,7 +384,7 @@ pub fn Disassembler() -> impl IntoView {
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     }
 }
