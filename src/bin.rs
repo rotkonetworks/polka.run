@@ -50,7 +50,7 @@ fn parse_data(data: &[u8], chunk_size: usize) -> Vec<String> {
             for &byte in chunk {
                 // Write the hex representation directly into hex_part.
                 use std::fmt::Write;
-                write!(hex_part, "{:02x} ", byte).expect("Writing to a String should never fail");
+                write!(hex_part, "{:02X} ", byte).expect("Writing to a String should never fail");
                 // Append ASCII representation or '.' to text_part.
                 text_part.push(if (32..=126).contains(&byte) { byte as char } else { '.' });
             }
@@ -107,7 +107,7 @@ fn disassemble(data: &[u8]) -> Result<Vec<CodeLine>, LoadError> {
 #[inline]
 fn stringify_byte_offset(off: usize) -> String {
     // 10 characters total - 8 for the 4 byte number, and 2 for "0x"
-    format!("{:#010x}", off)
+    format!("{:#010X}", off)
 }
 
 #[inline]
@@ -118,5 +118,5 @@ fn stringify_byte_array(bytes: &[u8]) -> String {
 
 #[inline]
 fn stringify_byte(b: &u8) -> String {
-    format!("{:02x}", *b)
+    format!("{:02X}", *b)
 }
