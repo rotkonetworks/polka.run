@@ -2,7 +2,7 @@
 # will have compiled files and executables
 /target/
 /dist/
-/style/output.css
+#/style/output.css
 app/docs
 pkg
 Cargo.lock
