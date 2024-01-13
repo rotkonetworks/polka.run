@@ -491,7 +491,7 @@ fn CodeView(code: Vec<CodeLine>) -> impl IntoView {
                             view! {
                                 <tr>
                                     <td>{ins.offset.to_string()}</td>
-                                    <td></td>
+                                    <td>{ins.hex.to_string()}</td>
                                     <td>{ins.text.to_string()}</td>
                                 </tr>
                             }

@@ -16,6 +16,7 @@ pub struct Binary {
 #[derive(Clone, Default, Debug)]
 pub struct CodeLine {
     pub offset: String,
+    pub hex: String,
     pub text: String,
 }
 
@@ -73,15 +74,16 @@ fn disassemble(data: &[u8]) -> Result<Vec<CodeLine>, LoadError> {
         Ok(blob) => {
             let mut offset = 0usize;
             let mut lines = vec![];
-            let mut buf: [u8; 32] = [0; 32];
+            let mut bytes: [u8; 32] = [0; 32];
 
             for (i, res) in blob.instructions().enumerate() {
                 match res {
                     Ok(ins) => {
-                        let len = ins.serialize_into(&mut buf);
+                        let len = ins.serialize_into(&mut bytes);
 
                         lines.push(CodeLine {
-                            offset: format_byte_offset(offset),
+                            offset: stringify_byte_offset(offset),
+                            hex: stringify_byte_array(&bytes[0..len]),
                             text: ins.to_string(),
                         });
 
@@ -102,9 +104,19 @@ fn disassemble(data: &[u8]) -> Result<Vec<CodeLine>, LoadError> {
     }
 }
 
-/// Turn 64 bit byte offset into a hex string.
 #[inline]
-fn format_byte_offset(off: usize) -> String {
+fn stringify_byte_offset(off: usize) -> String {
     // 10 characters total - 8 for the 4 byte number, and 2 for "0x"
     format!("{:#010x}", off)
+}
+
+#[inline]
+fn stringify_byte_array(bytes: &[u8]) -> String {
+    let pieces: Vec<String> = bytes.iter().map(stringify_byte).collect();
+    pieces.join(" ")
+}
+
+#[inline]
+fn stringify_byte(b: &u8) -> String {
+    format!("{:02x}", *b)
 }
