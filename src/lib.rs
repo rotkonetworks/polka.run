@@ -1,6 +1,6 @@
 mod bin;
 
-use crate::bin::{Binary, LoadError};
+use crate::bin::{Binary, CodeLine, LoadError};
 
 use leptos::*;
 
@@ -474,7 +474,7 @@ fn MemoryView(memory: Vec<String>) -> impl IntoView {
 }
 
 #[component]
-fn CodeView(code: Vec<String>) -> impl IntoView {
+fn CodeView(code: Vec<CodeLine>) -> impl IntoView {
     view! {
         <table>
             <thead>
@@ -490,9 +490,9 @@ fn CodeView(code: Vec<String>) -> impl IntoView {
                         .map(|ins| {
                             view! {
                                 <tr>
+                                    <td>{ins.offset.to_string()}</td>
                                     <td></td>
-                                    <td></td>
-                                    <td>{ins}</td>
+                                    <td>{ins.text.to_string()}</td>
                                 </tr>
                             }
                         })

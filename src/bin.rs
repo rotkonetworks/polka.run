@@ -10,11 +10,17 @@ pub type LoadError = String;
 pub struct Binary {
     // TODO: Use proper types rather than strings.
     pub memory: Vec<String>,
-    pub code: Vec<String>,
+    pub code: Vec<CodeLine>,
+}
+
+#[derive(Clone, Default, Debug)]
+pub struct CodeLine {
+    pub offset: String,
+    pub text: String,
 }
 
 impl Binary {
-    pub fn new(memory: Vec<String>, code: Vec<String>) -> Self {
+    pub fn new(memory: Vec<String>, code: Vec<CodeLine>) -> Self {
         Self { memory, code }
     }
 }
@@ -62,28 +68,43 @@ fn parse_data(data: &[u8], chunk_size: usize) -> Vec<String> {
         .collect()
 }
 
-fn disassemble(data: &[u8]) -> Result<Vec<String>, LoadError> {
-    let blob = ProgramBlob::parse(data);
-    if blob.is_err() {
-        return Err("Failed to parse blob".into());
-    }
+fn disassemble(data: &[u8]) -> Result<Vec<CodeLine>, LoadError> {
+    match ProgramBlob::parse(data) {
+        Ok(blob) => {
+            let mut offset = 0usize;
+            let mut lines = vec![];
+            let mut buf: [u8; 32] = [0; 32];
 
-    let blob = blob.unwrap();
+            for (i, res) in blob.instructions().enumerate() {
+                match res {
+                    Ok(ins) => {
+                        let len = ins.serialize_into(&mut buf);
 
-    let mut result = vec![];
-    for (i, maybe_instruction) in blob.instructions().enumerate() {
-        match maybe_instruction {
-            Ok(instruction) => {
-                result.push(instruction.to_string());
+                        lines.push(CodeLine {
+                            offset: format_byte_offset(offset),
+                            text: ins.to_string(),
+                        });
+
+                        offset += len;
+                    }
+                    Err(error) => {
+                        return Err(format!(
+                            "ERROR: failed to parse raw instruction from blob. Index: {} Error: {}\n",
+                            i, error
+                        ));
+                    }
+                }
             }
-            Err(error) => {
-                return Err(format!(
-                    "ERROR: failed to parse raw instruction from blob. nth: {} Error: {}\n",
-                    i, error
-                ));
-            }
+
+            Ok(lines)
         }
+        Err(_) => Err("Failed to parse blob".into()),
     }
+}
 
-    Ok(result)
+/// Turn 64 bit byte offset into a hex string.
+#[inline]
+fn format_byte_offset(off: usize) -> String {
+    // 10 characters total - 8 for the 4 byte number, and 2 for "0x"
+    format!("{:#010x}", off)
 }
