@@ -10,11 +10,18 @@ pub type LoadError = String;
 pub struct Binary {
     // TODO: Use proper types rather than strings.
     pub memory: Vec<String>,
-    pub code: Vec<String>,
+    pub code: Vec<CodeLine>,
+}
+
+#[derive(Clone, Default, Debug)]
+pub struct CodeLine {
+    pub offset: String,
+    pub hex: String,
+    pub text: String,
 }
 
 impl Binary {
-    pub fn new(memory: Vec<String>, code: Vec<String>) -> Self {
+    pub fn new(memory: Vec<String>, code: Vec<CodeLine>) -> Self {
         Self { memory, code }
     }
 }
@@ -43,7 +50,7 @@ fn parse_data(data: &[u8], chunk_size: usize) -> Vec<String> {
             for &byte in chunk {
                 // Write the hex representation directly into hex_part.
                 use std::fmt::Write;
-                write!(hex_part, "{:02x} ", byte).expect("Writing to a String should never fail");
+                write!(hex_part, "{:02X} ", byte).expect("Writing to a String should never fail");
                 // Append ASCII representation or '.' to text_part.
                 text_part.push(if (32..=126).contains(&byte) { byte as char } else { '.' });
             }
@@ -62,28 +69,54 @@ fn parse_data(data: &[u8], chunk_size: usize) -> Vec<String> {
         .collect()
 }
 
-fn disassemble(data: &[u8]) -> Result<Vec<String>, LoadError> {
-    let blob = ProgramBlob::parse(data);
-    if blob.is_err() {
-        return Err("Failed to parse blob".into());
-    }
+fn disassemble(data: &[u8]) -> Result<Vec<CodeLine>, LoadError> {
+    match ProgramBlob::parse(data) {
+        Ok(blob) => {
+            let mut offset = 0usize;
+            let mut lines = vec![];
+            let mut bytes: [u8; 32] = [0; 32];
 
-    let blob = blob.unwrap();
+            for (i, res) in blob.instructions().enumerate() {
+                match res {
+                    Ok(ins) => {
+                        let len = ins.serialize_into(&mut bytes);
 
-    let mut result = vec![];
-    for (i, maybe_instruction) in blob.instructions().enumerate() {
-        match maybe_instruction {
-            Ok(instruction) => {
-                result.push(instruction.to_string());
+                        lines.push(CodeLine {
+                            offset: stringify_byte_offset(offset),
+                            hex: stringify_byte_array(&bytes[0..len]),
+                            text: ins.to_string(),
+                        });
+
+                        offset += len;
+                    }
+                    Err(error) => {
+                        return Err(format!(
+                            "ERROR: failed to parse raw instruction from blob. Index: {} Error: {}\n",
+                            i, error
+                        ));
+                    }
+                }
             }
-            Err(error) => {
-                return Err(format!(
-                    "ERROR: failed to parse raw instruction from blob. nth: {} Error: {}\n",
-                    i, error
-                ));
-            }
+
+            Ok(lines)
         }
+        Err(_) => Err("Failed to parse blob".into()),
     }
+}
 
-    Ok(result)
+#[inline]
+fn stringify_byte_offset(off: usize) -> String {
+    // 10 characters total - 8 for the 4 byte number, and 2 for "0x"
+    format!("{:#010X}", off)
+}
+
+#[inline]
+fn stringify_byte_array(bytes: &[u8]) -> String {
+    let pieces: Vec<String> = bytes.iter().map(stringify_byte).collect();
+    pieces.join(" ")
+}
+
+#[inline]
+fn stringify_byte(b: &u8) -> String {
+    format!("{:02X}", *b)
 }
