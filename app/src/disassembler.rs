@@ -293,22 +293,34 @@ pub fn Disassembler() -> impl IntoView {
                         <div class="h-50vh flex flex-row p-4">
                             <Show when=move || unified_data().is_empty()>
                                 <div class="border-dashed border-4 w-full h-full p-4">
-                                    <FileUploadComponent on_file_uploaded=move |
-                                        data_option,
-                                        filename|
-                                    {
-                                        if let Some(data) = data_option {
-                                            set_filename(filename);
-                                            set_chunk_size(16);
-                                            set_unified_data(
-                                                unified_representation(&data, chunk_size.get() as usize),
-                                            );
-                                            match disassemble_into(&data) {
-                                                Ok(disassembled) => set_disassembled_data(disassembled),
-                                                Err(error) => set_disassembled_data(error.to_string()),
+
+                                <FileUploadComponent on_file_uploaded=move |data_page, is_last_page, filename| {
+                                    static mut ACCUMULATED_DATA: Vec<u8> = Vec::new();
+
+                                    if let Some(page) = data_page {
+                                        unsafe {
+                                            ACCUMULATED_DATA.extend(page);
+
+                                            if is_last_page {
+                                                // Finalize processing once all pages are received
+                                                let complete_data = ACCUMULATED_DATA.clone();
+                                                set_filename(filename);
+                                                set_chunk_size(16);
+                                                set_unified_data(
+                                                    unified_representation(&complete_data, chunk_size.get() as usize),
+                                                );
+                                                match disassemble_into(&complete_data) {
+                                                    Ok(disassembled) => set_disassembled_data(disassembled),
+                                                    Err(error) => set_disassembled_data(error.to_string()),
+                                                }
+
+                                                // Clear the accumulated data for future uploads
+                                                ACCUMULATED_DATA.clear();
                                             }
                                         }
-                                    }/>
+                                    }
+                                }/>
+
                                 </div>
                             </Show>
                             <Show when=move || !unified_data().is_empty()>
@@ -371,7 +383,7 @@ pub fn Disassembler() -> impl IntoView {
                                     </div>
                                     <Show when=move || !unified_data().is_empty()>
                                         <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
-                                            {move || disassembled_data().clone()}
+                                            {move || disassembled_data.get()}
                                         </pre>
                                     </Show>
                                 </div>
