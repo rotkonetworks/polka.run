@@ -2,6 +2,7 @@ use leptos::*;
 use polkavm::ProgramBlob;
 use crate::file_upload::FileUploadComponent;
 use serde::{Deserialize, Serialize};
+use std::fmt::Write;
 // use ron::de::from_str;
 
 #[derive(Clone, Debug)]
@@ -241,20 +242,27 @@ pub fn Disassembler() -> impl IntoView {
             .collect()
     }
 
+
     fn disassemble_into_lines(data: &[u8]) -> Result<Vec<DisassembledLine>, &'static str> {
         let blob = ProgramBlob::parse(data).map_err(|_| "Failed to parse blob")?;
 
         let mut result = Vec::new();
         let mut offset = 0usize;
+        let mut hex_buffer = String::with_capacity(64); // Adjust size as needed
 
         for maybe_instruction in blob.instructions() {
+            hex_buffer.clear();
+
             match maybe_instruction {
                 Ok(instruction) => {
-                    let mut serialized = [0u8; 32];
+                    let mut serialized = [0u8; 32]; // Adjust hard coded size as needed
                     let size = instruction.serialize_into(&mut serialized);
-                    let hex_representation = serialized[..size].iter().map(|b| format!("{:02X}", b)).collect::<Vec<String>>().join(" ");
 
-                    result.push(DisassembledLine::new(offset, hex_representation, instruction.to_string()));
+                    for &byte in &serialized[..size] {
+                        write!(hex_buffer, "{:02X} ", byte).expect("Writing to string failed");
+                    }
+
+                    result.push(DisassembledLine::new(offset, hex_buffer.clone(), instruction.to_string()));
                     offset += size;
                 },
                 Err(error) => {
@@ -341,7 +349,7 @@ pub fn Disassembler() -> impl IntoView {
                                             .map(|line| {
                                                 view! {
                                                     <div class="py-1 font-mono text-xs md:text-md xl:text-lg">
-                                                        {line.clone()}
+                                                        {line}
                                                     </div>
                                                 }
                                             })
