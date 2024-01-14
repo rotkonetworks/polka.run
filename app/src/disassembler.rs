@@ -4,6 +4,24 @@ use crate::file_upload::FileUploadComponent;
 use serde::{Deserialize, Serialize};
 // use ron::de::from_str;
 
+#[derive(Clone, Debug)]
+struct DisassembledLine {
+    offset: String,
+    hex: String,
+    assembly: String,
+}
+
+// Helper function to create a new DisassembledLine
+impl DisassembledLine {
+    fn new(offset: usize, hex: String, assembly: String) -> Self {
+        Self {
+            offset: format!("{:06X}", offset),
+            hex,
+            assembly,
+        }
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 enum MenuItemType {
     RegularItem,
@@ -186,7 +204,7 @@ pub fn Disassembler() -> impl IntoView {
     let (filename, set_filename) = create_signal(String::new());
     let (show_file_options, set_show_file_options)  = create_signal(false);
 
-    let (disassembled_data, set_disassembled_data) = create_signal(String::new());
+    let (disassembled_data, set_disassembled_data) = create_signal(Vec::<DisassembledLine>::new());
 
 
     fn unified_representation(data: &[u8], chunk_size: usize) -> Vec<String> {
@@ -223,24 +241,24 @@ pub fn Disassembler() -> impl IntoView {
             .collect()
     }
 
-    fn disassemble_into(data: &[u8]) -> Result<String, &'static str> {
-        let blob = ProgramBlob::parse(data);
-        if blob.is_err() {
-            return Err("Failed to parse blob");
-        }
-        let blob = blob.unwrap();
+    fn disassemble_into_lines(data: &[u8]) -> Result<Vec<DisassembledLine>, &'static str> {
+        let blob = ProgramBlob::parse(data).map_err(|_| "Failed to parse blob")?;
 
-        let mut result = String::new();
-        for (nth_instruction, maybe_instruction) in blob.instructions().enumerate() {
+        let mut result = Vec::new();
+        let mut offset = 0usize;
+
+        for maybe_instruction in blob.instructions() {
             match maybe_instruction {
                 Ok(instruction) => {
-                    result.push_str(&format!("{}: {}\n", nth_instruction, instruction));
-                }
+                    let mut serialized = [0u8; 32];
+                    let size = instruction.serialize_into(&mut serialized);
+                    let hex_representation = serialized[..size].iter().map(|b| format!("{:02X}", b)).collect::<Vec<String>>().join(" ");
+
+                    result.push(DisassembledLine::new(offset, hex_representation, instruction.to_string()));
+                    offset += size;
+                },
                 Err(error) => {
-                    result.push_str(&format!(
-                    "ERROR: failed to parse raw instruction from blob. nth: {} Error: {}\n",
-                    nth_instruction, error
-                ));
+                    result.push(DisassembledLine::new(offset, "ERROR".to_string(), format!("Error: {}", error)));
                 }
             }
         }
@@ -277,7 +295,7 @@ pub fn Disassembler() -> impl IntoView {
                                             set_unified_data(Vec::new());
                                             set_chunk_size(0);
                                             set_filename(String::new());
-                                            set_disassembled_data(String::new());
+                                            set_disassembled_data(Vec::new());
                                         }
                                     >
 
@@ -303,9 +321,13 @@ pub fn Disassembler() -> impl IntoView {
                                             set_unified_data(
                                                 unified_representation(&data, chunk_size.get() as usize),
                                             );
-                                            match disassemble_into(&data) {
+
+                                            match disassemble_into_lines(&data) {
                                                 Ok(disassembled) => set_disassembled_data(disassembled),
-                                                Err(error) => set_disassembled_data(error.to_string()),
+                                                Err(error) => {
+                                                    set_disassembled_data(Vec::new());
+                                                    println!("{}", error);
+                                                }
                                             }
                                         }
                                     }/>
@@ -353,34 +375,38 @@ pub fn Disassembler() -> impl IntoView {
                                 </button>
                             </div>
                         </header>
-                        <div class="w-full h-35vh mt-4 border-t border-gray-200 dark:border-gray-800 overflow-x-auto">
-                            <div class="text-sm p-4 flex flex-row">
-                                <div class="hidden md:block md:w-10/100 flex">
-                                    <div class="h-4">
-                                        <h3>Offset</h3>
-                                    </div>
-                                </div>
-                                <div class="hidden md:block md:w-23/100 flex">
-                                    <div class="h-4">
-                                        <h3>HEX</h3>
-                                    </div>
-                                </div>
-                                <div class="w-full md:w-33/100">
-                                    <div class="h-4">
-                                        <h3>Assembly</h3>
-                                    </div>
-                                    <Show when=move || !unified_data().is_empty()>
-                                        <pre class="border border-gray-200 rounded p-2 bg-gray-100 font-mono text-xs md:text-md xl:text-lg overflow-x-scroll">
-                                            {move || disassembled_data().clone()}
-                                        </pre>
-                                    </Show>
-                                </div>
-                                <div class="hidden md:block md:w-33/100">
-                                    <div class="h-4">
-                                        <h3>Hint</h3>
-                                    </div>
-                                </div>
+
+                        <div class="w-full mt-4 border-t border-gray-200 dark:border-gray-800 overflow-x-auto">
+                            {/* flex container for headers */}
+                            <div class="flex divide-x divide-gray-200">
+                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">Offset</div>
+                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">Hex</div>
+                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">Assembly</div>
+                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">Hint</div>
                             </div>
+
+                            {/* Flex container for content */}
+                            <Show when=move || !disassembled_data().is_empty()>
+                                {move || disassembled_data().iter().map(|line| {
+                                    view! {
+                                        <div class="flex divide-x divide-gray-200">
+                                            <div class="flex-1 p-2 bg-white">
+                                                <pre class="whitespace-pre-wrap overflow-x-auto">{&line.offset}</pre>
+                                            </div>
+                                            <div class="flex-1 p-2 bg-white">
+                                                <pre class="whitespace-pre-wrap overflow-x-auto">{&line.hex}</pre>
+                                            </div>
+                                            <div class="flex-1 p-2 bg-white">
+                                                <pre class="whitespace-pre-wrap overflow-x-auto">{&line.assembly}</pre>
+                                            </div>
+                                            <div class="flex-1 p-2 bg-white">
+                                                {/* Placeholder for Hint */}
+                                                <pre class="whitespace-pre-wrap overflow-x-auto"></pre>
+                                            </div>
+                                        </div>
+                                    }
+                                }).collect::<Vec<_>>()}
+                            </Show>
                         </div>
                     </div>
                 </div>
