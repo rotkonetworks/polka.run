@@ -24,7 +24,7 @@ serde = { version = "1", features = ["derive"] }
 
 
 # dependecies for client (enable when csr or hydrate set)
-wasm-bindgen = { version = "0.2.89" }
+wasm-bindgen = { version = "0.2.90" }
 log = "0.4.20"
 cached = { version = "0.47.0", optional = true }
 console_log = { version = "1"}
