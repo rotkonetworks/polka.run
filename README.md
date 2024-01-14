@@ -14,12 +14,12 @@ cargo make build
 ```
 
 ## Technologies
-- [polkavm]: https://github.com/koute/polkavm
-- [leptos]: https://github.com/leptos-rs/leptos
-- [`leptos-query`]: https://github.com/nicoburniske/leptos_query/tree/main/examples
-- ['leptos-use']: https://github.com/Synphonyte/leptos-use/tree/main/examples
-- [`cargo-make`]: https://github.com/sagiegurari/cargo-make
-- [`trunk`]: https://github.com/thedodd/trunk
+- [polkavm](https://github.com/koute/polkavm)
+- [leptos]("https://github.com/leptos-rs/leptos")
+- [leptos-query](https://github.com/nicoburniske/leptos_query/tree/main/examples)
+- [leptos-use](https://github.com/Synphonyte/leptos-use/tree/main/examples)
+- [cargo-make](https://github.com/sagiegurari/cargo-make)
+- [trunk](https://github.com/thedodd/trunk)
 
 ## Screenshots
 ![polkarun-v04](https://github.com/rotkonetworks/polka.run/blob/master/app/public/images/polkarun-v04.png?raw=true)
