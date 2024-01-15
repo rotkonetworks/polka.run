@@ -55,6 +55,9 @@
 
 
 ## Read more
+backend:
 [IndexedDB limits](https://blog.bitsrc.io/how-to-use-indexeddb-a-nosql-db-on-the-browser-f845da3caf35)
-
-https://docs.rs/gloo/latest/gloo/
+[IndexedDB API docs](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
+[gloo workers](https://docs.rs/gloo/latest/gloo/)
+frontend:
+[leptos-use scroll](https://leptos-use.rs/elements/use_window_scroll.html)
