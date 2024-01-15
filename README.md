@@ -16,9 +16,11 @@ cargo make build
 ## Technologies
 - [polkavm](https://github.com/koute/polkavm)
 - [leptos](https://github.com/leptos-rs/leptos)
+- [IndexedDB with rexie](https://crates.io/crates/rexie)
+- [gloo storage/workers](https://crates.io/crates/gloo-storage)
 - [leptos-query](https://github.com/nicoburniske/leptos_query/tree/main/examples)
 - [leptos-use](https://github.com/Synphonyte/leptos-use/tree/main/examples)
-- [cargo-make](https://github.com/sagiegurari/cargo-make)
+- [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen/tree/main/examples)
 - [trunk](https://github.com/thedodd/trunk)
 
 ## Screenshots
