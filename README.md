@@ -1,6 +1,9 @@
 # polka.run
 
-webgui for polkavm disassembler
+webgui for polkavm disassembler  
+
+
+testing binary: [hello.polkavm](https://github.com/koute/polkavm/raw/master/guest-programs/output/example-hello-world.polkavm)
 
 ## Development
 
