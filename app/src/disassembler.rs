@@ -261,8 +261,11 @@ pub fn Disassembler() -> impl IntoView {
                     let size = instruction.serialize_into(&mut serialized);
                     let hex_buffer = serialized[..size]
                         .iter()
-                        .map(|byte| format!("{:02X} ", byte))
-                        .collect::<String>();
+                        .fold(String::new(), |mut acc, byte| {
+                            use std::fmt::Write;
+                            write!(acc, "{:02X} ", byte).expect("Failed to write to String");
+                            acc
+                        });
 
                     // Extract the opcode name from the instruction
                     let opcode_name = format!("{:?}", instruction.opcode());
