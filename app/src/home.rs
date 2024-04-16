@@ -6,70 +6,15 @@ pub fn Home() -> impl IntoView {
         <div class="container p-8 mx-auto">
             <h1 class="text-2xl font-bold text-center md:text-4xl lg:text-5xl">"polka.run"</h1>
             <div class="flex flex-col lg:flex-row gap-6 mt-6">
-                <div class="w-full lg:w-1/4 p-4">
-                    <h1 class="text-xl font-bold">
-                        "PolkaVM: Stepping up the Blockchain Virtual Machines"
-                    </h1>
+                <div class="w-full lg:w-2/4 p-4">
                     <p class="text-md leading-relaxed mt-4">
-                        "PolkaVM, a new RISC-V based virtual machine by Polkadot, promises to transform the blockchain landscape. Jan from Polkadot's team at Parity introduced this innovative VM, highlighting its unique features and potential benefits."
+                        "PolkaVM is general purpose virtual machine for user-level applications. "
+                        "It runs on x86 architechture linux based operating systems and transpiles. "
+                        "Rust/C/asm guest programs into RISC-V based bytecode. We have built graphical "
+                        "interface for disassembler to improve accessibility to understand binaries PolkaVM produces. "
                     </p>
-                    <h2 class="text-xl mt-4 font-semibold">
-                        "Background: Polkadot and WebAssembly"
-                    </h2>
-                    <p class="text-md leading-relaxed mt-2">
-                        "Polkadot has heavily utilized WebAssembly (WASM) since its inception, utilizing it for both its state transition function, known as the runtime, and its native smart contract solution. WASM's speed and efficiency initially made it an attractive choice. However, it presented several challenges."
-                    </p>
-                    <ul class="list-disc pl-5 mt-2">
-                        <li>
-                            <strong>"Complexity"</strong>
-                            " - WASM's instruction set grew from 172 to over 400 instructions, creating a complex and constantly evolving environment."
-                        </li>
-                        <li>
-                            <strong>Determinism</strong>
-                            " - Blockchain technology demands 100% determinism, but WASM does not fully meet this requirement."
-                        </li>
-                    </ul>
                 </div>
-                <div class="w-full lg:w-1/4 p-4">
-                    <h2 class="text-xl font-semibold">"PolkaVM's Advantages"</h2>
-                    <ul class="list-disc pl-5 mt-2">
-                        <li>
-                            <strong>"Performance"</strong>
-                            " - Early benchmarks show PolkaVM nearly matching native performance."
-                        </li>
-                        <li>
-                            <strong>"Efficiency"</strong>
-                            " - Exceptional compile-time performance, significantly outpacing competitors."
-                        </li>
-                        <li>
-                            <strong>"Simplicity and Stability"</strong>
-                            " - Leverages the RISC-V architecture for a simpler, stable baseline."
-                        </li>
-                        <li>
-                            <strong>"Security"</strong>
-                            " - Runs guest programs in separate processes and namespaces, similar to Docker containers."
-                        </li>
-                    </ul>
-                    <h2 class="text-xl mt-4 font-semibold">"Future Prospects"</h2>
-                    <p class="text-md leading-relaxed mt-2">
-                        "PolkaVM, still in its research phase, has shown impressive results in a short period."
-                    </p>
-                    <ul class="list-disc pl-5 mt-2">
-                        <li>
-                            <strong>"Time-Travel Debugging"</strong>
-                            " - A unique feature allowing backward navigation during debugging."
-                        </li>
-                        <li>
-                            <strong>"Cross-Platform Compatibility"</strong>
-                            " - Aiming to support different CPU architectures."
-                        </li>
-                        <li>
-                            <strong>"Optimization and Extensions"</strong>
-                            " - Continuous improvements in performance and support for RISC-V extensions."
-                        </li>
-                    </ul>
-                </div>
-                <div class="w-full lg:w-1/2">
+                <div class="w-full lg:w-2/4">
                     <pre class="text-xs xl:text-sm">
                         "╔══════════════════════════════════════════════════════════════════════════════╗\n"
                         "║...:OdKK;  ;OK;..OcXXXd0XxdkdOXNX0oX0lNdNWNWWx0WkWo0OdWXkWdK ; kNMX0d0XMMx;XMk║\n"
@@ -109,13 +54,7 @@ pub fn Home() -> impl IntoView {
                         "╚══════════════════════════════════════════════════════════════════════════════╝\n"
                     </pre>
                 </div>
-            </div>
-            <div class="mt-6">
-                <p class="text-md">
-                    "PolkaVM's combination of security, determinism, and performance positions it as a promising 
-                    lightweight virtual machine, making it ideal for a wide range of applications."
-                </p>
-            </div>
+           </div>
         </div>
     }
 }

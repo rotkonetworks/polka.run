@@ -1,24 +1,24 @@
 use leptos::*;
-use polkavm::ProgramBlob;
+use polkavm_common::program::{ProgramBlob, Instruction};
 use crate::file_upload::FileUploadComponent;
 use serde::{Deserialize, Serialize};
-use std::fmt::Write;
-// use ron::de::from_str;
 
 #[derive(Clone, Debug)]
 struct DisassembledLine {
     offset: String,
     hex: String,
     assembly: String,
+    operation: String,
 }
 
 // Helper function to create a new DisassembledLine
 impl DisassembledLine {
-    fn new(offset: usize, hex: String, assembly: String) -> Self {
+    fn new(offset: usize, hex: String, assembly: String, operation: String) -> Self {
         Self {
             offset: format!("{:06X}", offset),
             hex,
             assembly,
+            operation,
         }
     }
 }
@@ -42,52 +42,13 @@ struct MainMenu {
 
 #[component]
 fn MenuButton(item: MenuItem) -> impl IntoView {
-    // let (toggle_submenu, set_toggle_submenu) = create_signal(false);
-
-    // let item_type = item.item_type.clone();
-    // let toggle_submenu_handler = move || {
-    //     match item_type {
-    //         MenuItemType::SubMenu(_) => {
-    //             set_toggle_submenu(!toggle_submenu.get());
-    //         }
-    //         _ => {}
-    //     }
-    // };
 
     view! {
         <div
             role="menuitem"
             class="menu-button px-4 py-2 text-md font-semibold text-gray-700 bg-white hover:bg-gray-100 focus:bg-gray-200 rounded-xs border border-gray-300 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         >
-            // onclick=toggle_submenu_handler
             {&item.label}
-        // <Show when=move || match &item.item_type {
-        // MenuItemType::SubMenu(_) => true,
-        // _ => false,
-        // }>
-        // 
-        // <div
-        // role="menu"
-        // class="menu"
-        // tabindex="-1"
-        // aria-orientation="vertical"
-        // aria-labelledby="radix-:R1mqrnnnlaH1:"
-        // style="outline:none"
-        // >
-        // <ul>
-        // <For
-        // each=move || match &item.item_type {
-        // MenuItemType::SubMenu(items) => items.clone().into_iter(),
-        // _ => vec![].into_iter(),
-        // }
-        // key=|item| item.label.clone()
-        // children=move |item| {
-        // view! { <li><MenuButton item=item.clone() /></li> }
-        // }
-        // />
-        // </ul>
-        // </div>
-        // </Show>
         </div>
     }
 }
@@ -95,13 +56,6 @@ fn MenuButton(item: MenuItem) -> impl IntoView {
 // MainMenu
 #[component]
 fn MainMenu() -> impl IntoView {
-    // fn load_menu() -> Result<MainMenu, ron::Error> {
-    //     let content = include_str!("pages/disassembler.ron");
-    //     println!("{}", content);
-    //     from_str(content).map_err(|e| e.into())
-    // }
-    //
-    // let menu = load_menu().expect("Failed to load menu");
 
     let menu = MainMenu {
         items: vec![
@@ -243,30 +197,97 @@ pub fn Disassembler() -> impl IntoView {
     }
 
 
+    fn serialize_instruction(instruction: &Instruction) -> (String, usize) {
+        let mut buffer = [0u8; 16]; // maximum instruction size?
+        let size = instruction.serialize_into(&mut buffer);
+
+        let hex_representation = buffer[..size].iter()
+            .map(|byte| format!("{:02x}", byte))
+            .collect::<Vec<String>>()
+            .join(" ");
+
+        (hex_representation, size)
+    }
+
+    fn find_first_instruction_binary(blob: &ProgramBlob) -> Result<Vec<u8>, String> {
+        let first_instruction = blob.instructions().next()
+            .ok_or("No instructions in the blob")?
+            .map_err(|e| format!("Error parsing first instruction: {}", e))?;
+
+        let (binary, _) = serialize_instruction(&first_instruction);
+
+        // Convert the binary string to a byte array
+        let mut result = Vec::new();
+        for byte_str in binary.split_whitespace() {
+            let byte = u8::from_str_radix(byte_str, 16)
+                .map_err(|e| format!("Error parsing byte: {}", e))?;
+            result.push(byte);
+        }
+
+        Ok(result)
+    }
+
+    // Function to find the true byte offset of the first instruction in the blob
+    fn find_true_byte_offset(blob: &ProgramBlob, first_instruction_binary: &[u8]) -> Result<usize, String> {
+        let blob_bytes = blob.as_bytes();
+
+        blob_bytes.windows(first_instruction_binary.len())
+            .position(|window| window == first_instruction_binary)
+            .ok_or_else(|| "Binary sequence not found".to_string())
+    }
+
+    // Updated calculate_program_base_address function
+    fn calculate_program_base_address(blob: &ProgramBlob) -> Result<usize, String> {
+        let first_instruction_binary = find_first_instruction_binary(blob)?;
+        println!("First instruction binary: {:?}", first_instruction_binary);
+        find_true_byte_offset(blob, &first_instruction_binary)
+
+    }
+
     fn disassemble_into_lines(data: &[u8]) -> Result<Vec<DisassembledLine>, &'static str> {
         let blob = ProgramBlob::parse(data).map_err(|_| "Failed to parse blob")?;
 
+        // Assuming you have a function that calculates the true base address of the program
+        let program_base_address = calculate_program_base_address(&blob)
+            .map_err(|_| "Failed to calculate program base address")?;
+
         let mut result = Vec::new();
-        let mut offset = 0usize;
-        let mut hex_buffer = String::with_capacity(64); // Adjust size as needed
+        let mut current_byte_offset: usize = 0; // Start from the calculated program base address
 
         for maybe_instruction in blob.instructions() {
-            hex_buffer.clear();
-
             match maybe_instruction {
                 Ok(instruction) => {
-                    let mut serialized = [0u8; 32]; // Adjust hard coded size as needed
+                    let mut serialized = [0u8; 32]; // Adjust size as needed
                     let size = instruction.serialize_into(&mut serialized);
+                    let hex_buffer = serialized[..size]
+                        .iter()
+                        .map(|byte| format!("{:02X} ", byte))
+                        .collect::<String>();
 
-                    for &byte in &serialized[..size] {
-                        write!(hex_buffer, "{:02X} ", byte).expect("Writing to string failed");
-                    }
+                    // Extract the opcode name from the instruction
+                    let opcode_name = format!("{:?}", instruction.opcode());
 
-                    result.push(DisassembledLine::new(offset, hex_buffer.clone(), instruction.to_string()));
-                    offset += size;
+                    // Calculate the true offset for this instruction
+                    let true_offset = current_byte_offset + program_base_address;
+
+                    result.push(DisassembledLine::new(
+                        true_offset,
+                        hex_buffer,
+                        instruction.to_string(),
+                        opcode_name, // Pass the opcode name to the operation field
+                    ));
+                    current_byte_offset += size;
                 },
                 Err(error) => {
-                    result.push(DisassembledLine::new(offset, "ERROR".to_string(), format!("Error: {}", error)));
+                    // Even in case of an error, calculate the true offset
+                    let true_offset = current_byte_offset + program_base_address;
+
+                    result.push(DisassembledLine::new(
+                        true_offset,
+                        "ERROR".to_string(),
+                        format!("Error: {}", error),
+                        "Unknown".to_string(), // Use a placeholder like "Unknown" for errors
+                    ));
                 }
             }
         }
@@ -316,7 +337,7 @@ pub fn Disassembler() -> impl IntoView {
                 </Show>
                 <div class="flex flex-1 overflow-auto">
                     <div class="w-full h-full">
-                        <div class="h-50vh flex flex-row p-4">
+                        <div class="h-60vh flex flex-row p-4">
                             <Show when=move || unified_data().is_empty()>
                                 <div class="border-dashed border-4 w-full h-full p-4">
                                     <FileUploadComponent on_file_uploaded=move |
@@ -387,10 +408,10 @@ pub fn Disassembler() -> impl IntoView {
                         <div class="w-full mt-4 border-t border-gray-200 dark:border-gray-800 overflow-x-auto">
                             {/* flex container for headers */}
                             <div class="flex divide-x divide-gray-200">
-                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">Offset</div>
-                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">Hex</div>
-                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">Assembly</div>
-                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">Hint</div>
+                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">"Offset"</div>
+                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">"Hex"</div>
+                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">"Assembly"</div>
+                                <div class="flex-1 p-2 font-bold text-left bg-gray-200">"Operation"</div>
                             </div>
 
                             {/* Flex container for content */}
@@ -408,8 +429,7 @@ pub fn Disassembler() -> impl IntoView {
                                                 <pre class="whitespace-pre-wrap overflow-x-auto">{&line.assembly}</pre>
                                             </div>
                                             <div class="flex-1 p-2 bg-white">
-                                                {/* Placeholder for Hint */}
-                                                <pre class="whitespace-pre-wrap overflow-x-auto"></pre>
+                                                <pre class="whitespace-pre-wrap overflow-x-auto">{&line.operation}</pre>
                                             </div>
                                         </div>
                                     }
