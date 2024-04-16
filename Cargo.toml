@@ -6,7 +6,7 @@ resolver = "2"
 
 [workspace.package]
 version = "0.1.0"
-authors = ["Rotko Networks <hq@roko.net>"]
+authors = ["Rotko Networks <hq@rotko.net>"]
 edition = "2021"
 homepage = "https://polka.run/"
 documentation = "https://github.com/rotkonetworks/polka.run"

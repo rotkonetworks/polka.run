@@ -274,7 +274,7 @@ pub fn Disassembler() -> impl IntoView {
     }
 
     view! {
-        <div class="flex flex-col h-min-screen">
+        <div class="flex flex-col">
             <div class="flex h-16 w-full items-center px-4 md:px-6 bg-gray-100 dark:bg-gray-800">
                 <div>
                     <MainMenu/>
@@ -307,7 +307,7 @@ pub fn Disassembler() -> impl IntoView {
                                         }
                                     >
 
-                                        <div class="i-mdi-remove" />remove
+                                        <a><div class="i-mdi-remove" />remove</a>
                                     </li>
                                 </ul>
                             </Show>
