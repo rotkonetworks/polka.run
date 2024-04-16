@@ -47,10 +47,6 @@ jobs:
     - name: Install trunk
       run: trunk --version || cargo install trunk
 
-    # rustfmt just broken?
-    # - name: Run rustfmt
-    #   run: cargo fmt --all -- --check
-
     - name: Run clippy
       run: cargo clippy --all-targets --all-features -- -D warnings
 
@@ -69,5 +65,5 @@ jobs:
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.PAT }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./dist
